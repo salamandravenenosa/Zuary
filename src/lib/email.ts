@@ -2,9 +2,17 @@
 // Emails transacionais: boas-vindas, redefinição, meta atingida, erro de integração
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const FROM = process.env.EMAIL_FROM || "Zuary <noreply@resend.dev>";
+
+// Inicializa Resend lazy — só quando a API key existe
+function getResend() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn("[EMAIL] RESEND_API_KEY não configurada — email não será enviado");
+    return null;
+  }
+  return new Resend(apiKey);
+}
 
 export interface SendEmailParams {
   to: string;
@@ -15,6 +23,9 @@ export interface SendEmailParams {
 // Envia email
 export async function sendEmail(params: SendEmailParams): Promise<boolean> {
   try {
+    const resend = getResend();
+    if (!resend) return false;
+
     await resend.emails.send({
       from: FROM,
       to: params.to,
