@@ -1,0 +1,86 @@
+# ==========================================
+# DentalMetrics — Docker Compose Local
+# PostgreSQL + Redis + MailPit + MinIO
+# ==========================================
+
+services:
+  # ==========================================
+  # PostgreSQL (Banco de dados)
+  # ==========================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: dentalmetrics-postgres
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Pontesdavii
+      POSTGRES_DB: dentalmetrics
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # Redis (Rate limiting + Cache)
+  # ==========================================
+  redis:
+    image: redis:7-alpine
+    container_name: dentalmetrics-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # MailPit (Email transacional local)
+  # UI: http://localhost:8025
+  # SMTP: localhost:1025
+  # ==========================================
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: dentalmetrics-mailpit
+    restart: unless-stopped
+    ports:
+      - "1025:1025"   # SMTP server
+      - "8025:8025"   # Web UI
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+      # Limite de emails armazenados
+      MP_MAX_MESSAGES: 500
+
+  # ==========================================
+  # MinIO (Object Storage local — S3 compatible)
+  # UI: http://localhost:9001
+  # API: http://localhost:9000
+  # ==========================================
+  minio:
+    image: minio/minio:latest
+    container_name: dentalmetrics-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"   # API S3
+      - "9001:9001"   # Web UI
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:

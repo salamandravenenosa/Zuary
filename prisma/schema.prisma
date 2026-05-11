@@ -1,0 +1,364 @@
+// ==========================================
+// Schema Prisma — Enterprise SaaS Dashboard
+// Aprovação-ready para Meta, Google, TikTok
+// Multi-tenant isolado por clinicId
+// ==========================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// USUÁRIOS E AUTENTICAÇÃO
+// ==========================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  passwordHash  String
+  role          UserRole  @default(CLINIC)
+  clinicId      String?
+  avatarUrl     String?
+  emailVerified DateTime?
+  lastLoginAt   DateTime?
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  clinic        Clinic?   @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  sessions      Session[]
+  auditLogs     AuditLog[]
+  notifications Notification[]
+  reports       Report[]
+
+  @@index([clinicId])
+  @@index([email])
+}
+
+enum UserRole {
+  CLINIC
+  AGENCY
+  ADMIN
+}
+
+// ==========================================
+// SESSÕES (NextAuth + JWT)
+// ==========================================
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  ipAddress    String?
+  userAgent    String?
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ==========================================
+// CLÍNICAS (Multi-tenant)
+// ==========================================
+
+model Clinic {
+  id              String    @id @default(cuid())
+  name            String
+  slug            String    @unique
+  logoUrl         String?
+  faviconUrl      String?
+  primaryColor    String    @default("#7C3AED")
+  phone           String?
+  email           String?
+  address         String?
+  city            String?
+  state           String?
+  cnpj            String?
+  websiteUrl      String?
+  active          Boolean   @default(true)
+  plan            PlanType  @default(FREE)
+  trialEndsAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  users           User[]
+  integrations    Integration[]
+  oauthTokens     OAuthToken[]
+  metrics         MetricSnapshot[]
+  goals           Goal[]
+  reports         Report[]
+  notifications   Notification[]
+  apiUsageLogs    APIUsageLog[]
+
+  @@index([slug])
+}
+
+enum PlanType {
+  FREE
+  BASIC
+  PRO
+  ENTERPRISE
+}
+
+// ==========================================
+// TOKENS OAUTH (Encriptados AES-256-GCM)
+// Nunca em .env — armazenados encriptados no banco
+// ==========================================
+
+model OAuthToken {
+  id              String    @id @default(cuid())
+  clinicId        String
+  integrationType IntegrationType
+  // Tokens encriptados com AES-256-GCM
+  encryptedAccessToken  String  @db.Text
+  encryptedRefreshToken String? @db.Text
+  ivAccessToken         String  // Vetor de inicialização
+  ivRefreshToken        String?
+  authTagAccessToken    String  // Auth tag GCM
+  authTagRefreshToken   String?
+  // Metadata
+  tokenType       String    @default("bearer")
+  scope           String?
+  expiresAt       DateTime?
+  platformUserId  String?
+  platformUsername String?
+  lastRefreshAt   DateTime?
+  refreshCount    Int       @default(0)
+  // Status
+  status          TokenStatus @default(ACTIVE)
+  errorMessage    String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  clinic          Clinic    @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+
+  @@unique([clinicId, integrationType])
+  @@index([clinicId])
+  @@index([expiresAt])
+}
+
+enum TokenStatus {
+  ACTIVE
+  EXPIRING_SOON
+  EXPIRED
+  REVOKED
+  REFRESH_FAILED
+}
+
+// ==========================================
+// INTEGRAÇÕES (Status + Config)
+// ==========================================
+
+model Integration {
+  id              String    @id @default(cuid())
+  clinicId        String
+  type            IntegrationType
+  status          IntegrationStatus @default(DISCONNECTED)
+  // Dados específicos da plataforma (não sensíveis)
+  platformId      String?
+  platformName    String?
+  platformUrl     String?
+  extraConfig     Json?
+  // Sync metadata
+  lastSyncAt      DateTime?
+  nextSyncAt      DateTime?
+  syncFrequency   String    @default("daily")
+  errorMessage    String?
+  retryCount      Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  clinic          Clinic    @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+
+  @@unique([clinicId, type])
+  @@index([clinicId])
+  @@index([nextSyncAt])
+}
+
+enum IntegrationType {
+  INSTAGRAM
+  TIKTOK
+  GOOGLE_ANALYTICS
+  GOOGLE_BUSINESS
+  META_PIXEL
+  WHATSAPP_BUSINESS
+}
+
+enum IntegrationStatus {
+  CONNECTED
+  DISCONNECTED
+  ERROR
+  TOKEN_EXPIRED
+  SYNCING
+  PENDING_REVIEW
+}
+
+// ==========================================
+// SNAPSHOTS DE MÉTRICAS
+// Dados coletados via CRON, não em tempo real
+// ==========================================
+
+model MetricSnapshot {
+  id            String    @id @default(cuid())
+  clinicId      String
+  source        MetricSource
+  period        MetricPeriod @default(DAILY)
+  dateFrom      DateTime
+  dateTo        DateTime
+  data          Json
+  totalValue    Float?
+  changePercent Float?
+  syncJobId     String?
+  createdAt     DateTime  @default(now())
+
+  clinic        Clinic    @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+
+  @@unique([clinicId, source, period, dateFrom])
+  @@index([clinicId, source, dateFrom])
+  @@index([syncJobId])
+}
+
+enum MetricSource {
+  INSTAGRAM
+  TIKTOK
+  GOOGLE_ANALYTICS
+  GOOGLE_BUSINESS
+  META_PIXEL
+  WHATSAPP
+  CONSOLIDATED
+}
+
+enum MetricPeriod {
+  DAILY
+  WEEKLY
+  MONTHLY
+  CUSTOM
+}
+
+// ==========================================
+// METAS MENSAIS
+// ==========================================
+
+model Goal {
+  id            String    @id @default(cuid())
+  clinicId      String
+  metricType    String
+  targetValue   Float
+  currentValue  Float     @default(0)
+  month         Int
+  year          Int
+  achieved      Boolean   @default(false)
+  achievedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  clinic        Clinic    @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+
+  @@unique([clinicId, metricType, month, year])
+  @@index([clinicId, month, year])
+}
+
+// ==========================================
+// NOTIFICAÇÕES
+// ==========================================
+
+model Notification {
+  id            String    @id @default(cuid())
+  clinicId      String
+  userId        String?
+  type          NotificationType
+  title         String
+  message       String
+  read          Boolean   @default(false)
+  actionUrl     String?
+  createdAt     DateTime  @default(now())
+
+  clinic        Clinic    @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  user          User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([clinicId, read])
+  @@index([userId, read])
+}
+
+enum NotificationType {
+  GOAL_ACHIEVED
+  INTEGRATION_ERROR
+  INTEGRATION_CONNECTED
+  SYNC_COMPLETE
+  SYNC_FAILED
+  TOKEN_EXPIRING
+  SYSTEM
+}
+
+// ==========================================
+// RELATÓRIOS PDF
+// ==========================================
+
+model Report {
+  id            String    @id @default(cuid())
+  clinicId      String
+  userId        String?
+  title         String
+  month         Int
+  year          Int
+  fileUrl       String?
+  fileSize      Int?
+  data          Json
+  generatedAt   DateTime  @default(now())
+
+  clinic        Clinic    @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  user          User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([clinicId, year, month])
+}
+
+// ==========================================
+// LOGS DE AUDITORIA (LGPD compliance)
+// ==========================================
+
+model AuditLog {
+  id            String    @id @default(cuid())
+  userId        String?
+  clinicId      String?
+  action        String
+  resource      String?
+  resourceId    String?
+  details       Json?
+  ipAddress     String?
+  userAgent     String?
+  createdAt     DateTime  @default(now())
+
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([clinicId, createdAt])
+  @@index([createdAt])
+}
+
+// ==========================================
+// LOGS DE USO DE API (Rate limiting + compliance)
+// ==========================================
+
+model APIUsageLog {
+  id            String    @id @default(cuid())
+  clinicId      String
+  endpoint      String
+  method        String
+  statusCode    Int?
+  responseTime  Int?      // Milissegundos
+  source        String?   // Ex: "cron_job", "dashboard", "webhook"
+  errorMessage  String?
+  createdAt     DateTime  @default(now())
+
+  clinic        Clinic    @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+
+  @@index([clinicId, createdAt])
+  @@index([createdAt])
+}
