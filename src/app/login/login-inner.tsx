@@ -208,6 +208,10 @@ export default function LoginPageInner() {
         <p className="text-center text-xs text-muted-foreground mt-6">
           Zuary © 2026 · Marketing Analytics
         </p>
+        <div className="flex items-center justify-center gap-4 mt-2">
+          <Link href="/legal/privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2">Política de Privacidade</Link>
+          <Link href="/legal/terms" className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2">Termos de Uso</Link>
+        </div>
       </motion.div>
     </div>
   );

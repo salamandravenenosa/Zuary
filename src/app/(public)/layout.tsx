@@ -41,7 +41,7 @@ export default function PublicLayout({
                 <span className="text-lg font-bold text-white">Zuary</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                Dashboard de métricas para clínicas odontológicas. Acompanhe seu marketing em um só lugar.
+                Dashboard de métricas de marketing digital. Monitore suas métricas em um só lugar.
               </p>
             </div>
             <div>
