@@ -1,4 +1,4 @@
-// Layout raiz — providers, fontes, tema dark
+// Layout raiz — Zuary Marketing Dashboard
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -11,9 +11,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Zuary Dashboard — Métricas de Marketing",
+  title: "Zuary — Marketing Analytics",
   description:
-    "Dashboard de métricas de marketing digital para clínicas odontológicas.",
+    "Dashboard de métricas de marketing digital. Monitore redes sociais, site, Google Maps e mais.",
 };
 
 export default function RootLayout({

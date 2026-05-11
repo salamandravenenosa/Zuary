@@ -10,7 +10,7 @@ export default function PrivacyPolicyPage() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">1. Introdução</h2>
           <p className="text-muted-foreground leading-relaxed">
-            O Zuary (&quot;nós&quot;, &quot;nosso&quot;) opera a plataforma de dashboard de métricas de marketing digital para clínicas odontológicas. Esta Política de Privacidade descreve como coletamos, usamos, armazenamos e protegemos suas informações pessoais, em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018), o Regulamento Geral de Proteção de Dados (GDPR) da União Europeia, e as políticas de plataforma do Meta, Google e TikTok.
+            O Zuary (&quot;nós&quot;, &quot;nosso&quot;) opera a plataforma de dashboard de métricas de marketing digital para empresas e negócios. Esta Política de Privacidade descreve como coletamos, usamos, armazenamos e protegemos suas informações pessoais, em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018), o Regulamento Geral de Proteção de Dados (GDPR) da União Europeia, e as políticas de plataforma do Meta, Google e TikTok.
           </p>
         </section>
 
@@ -110,7 +110,7 @@ export default function PrivacyPolicyPage() {
             <li><strong>Oposição:</strong> Opor-se ao tratamento dos seus dados</li>
           </ul>
           <p className="text-muted-foreground leading-relaxed mt-2">
-            Para exercer seus direitos, entre em contato com nosso Encarregado de Dados: <strong>privacidade@dentalmetrics.com.br</strong>
+            Para exercer seus direitos, entre em contato com nosso Encarregado de Dados: <strong>privacidade@negóciometrics.com.br</strong>
           </p>
         </section>
 
@@ -132,7 +132,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-xl font-semibold text-white mb-3">10. Contato</h2>
           <p className="text-muted-foreground leading-relaxed">
             Encarregado de Proteção de Dados (DPO):<br />
-            Email: privacidade@dentalmetrics.com.br<br />
+            Email: privacidade@negóciometrics.com.br<br />
             Endereço: São Paulo, SP — Brasil
           </p>
         </section>

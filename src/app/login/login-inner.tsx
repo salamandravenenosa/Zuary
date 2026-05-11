@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Sparkles, Loader2, AlertCircle, Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -117,7 +118,7 @@ export default function LoginPageInner() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-white">Zuary</h1>
-            <p className="text-sm text-muted-foreground">Dashboard de Métricas</p>
+            <p className="text-sm text-muted-foreground">Marketing Analytics</p>
           </div>
         </div>
 
@@ -171,7 +172,12 @@ export default function LoginPageInner() {
                 />
               </div>
               <div>
-                <label className="text-sm text-muted-foreground mb-1.5 block">Senha</label>
+                <div className="flex items-center justify-between">
+                <label className="text-sm text-muted-foreground">Senha</label>
+                <Link href="/forgot-password" className="text-xs text-[#7C3AED] hover:underline">
+                  Esqueci a senha
+                </Link>
+              </div>
                 <div className="relative">
                   <Input
                     type={showPassword ? "text" : "password"}
@@ -200,7 +206,7 @@ export default function LoginPageInner() {
         </Card>
 
         <p className="text-center text-xs text-muted-foreground mt-6">
-          Zuary © 2026 · Marketing Digital para Odontologia
+          Zuary © 2026 · Marketing Analytics
         </p>
       </motion.div>
     </div>

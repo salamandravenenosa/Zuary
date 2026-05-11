@@ -108,7 +108,7 @@ export function Sidebar({ userRole = "CLINIC", clinicName }: SidebarProps) {
                 Zuary
               </p>
               <p className="text-[11px] text-muted-foreground mt-0.5">
-                {clinicName || "Sua Clínica"}
+                {clinicName || "Meu Negócio"}
               </p>
             </motion.div>
           )}
