@@ -116,7 +116,7 @@ export default function LoginPageInner() {
             <Sparkles className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">DentalMetrics</h1>
+            <h1 className="text-2xl font-bold text-white">Zuary</h1>
             <p className="text-sm text-muted-foreground">Dashboard de Métricas</p>
           </div>
         </div>
@@ -200,7 +200,7 @@ export default function LoginPageInner() {
         </Card>
 
         <p className="text-center text-xs text-muted-foreground mt-6">
-          DentalMetrics © 2026 · Marketing Digital para Odontologia
+          Zuary © 2026 · Marketing Digital para Odontologia
         </p>
       </motion.div>
     </div>

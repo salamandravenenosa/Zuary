@@ -16,7 +16,7 @@ export default function PublicLayout({
             <div className="h-8 w-8 rounded-lg bg-[#7C3AED] flex items-center justify-center">
               <Sparkles className="h-4 w-4 text-white" />
             </div>
-            <span className="text-lg font-bold text-white">DentalMetrics</span>
+            <span className="text-lg font-bold text-white">Zuary</span>
           </Link>
           <nav className="flex items-center gap-6 text-sm">
             <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">Sobre</Link>
@@ -38,7 +38,7 @@ export default function PublicLayout({
                 <div className="h-8 w-8 rounded-lg bg-[#7C3AED] flex items-center justify-center">
                   <Sparkles className="h-4 w-4 text-white" />
                 </div>
-                <span className="text-lg font-bold text-white">DentalMetrics</span>
+                <span className="text-lg font-bold text-white">Zuary</span>
               </div>
               <p className="text-sm text-muted-foreground">
                 Dashboard de métricas para clínicas odontológicas. Acompanhe seu marketing em um só lugar.
@@ -73,7 +73,7 @@ export default function PublicLayout({
           </div>
           <div className="border-t border-white/[0.08] mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-xs text-muted-foreground">
-              © 2026 DentalMetrics. Todos os direitos reservados. CNPJ: 00.000.000/0001-00
+              © 2026 Zuary. Todos os direitos reservados. CNPJ: 00.000.000/0001-00
             </p>
             <p className="text-xs text-muted-foreground">
               Em conformidade com LGPD, Meta Platform Policies, Google API Services e TikTok Developer Policies.

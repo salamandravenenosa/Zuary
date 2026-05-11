@@ -9,24 +9,24 @@ export default function TermsPage() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">1. Aceitação dos Termos</h2>
           <p className="text-muted-foreground leading-relaxed">
-            Ao acessar ou usar o DentalMetrics, você concorda com estes Termos de Uso. Se não concordar, não use o serviço.
+            Ao acessar ou usar o Zuary, você concorda com estes Termos de Uso. Se não concordar, não use o serviço.
           </p>
         </section>
 
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">2. Descrição do Serviço</h2>
           <p className="text-muted-foreground leading-relaxed">
-            O DentalMetrics é uma plataforma SaaS de dashboard de métricas de marketing digital para clínicas odontológicas. O serviço permite que clínicas visualizem dados consolidados de redes sociais (Instagram, TikTok), analytics de site (Google Analytics), Google Meu Negócio e WhatsApp Business em um único painel.
+            O Zuary é uma plataforma SaaS de dashboard de métricas de marketing digital para clínicas odontológicas. O serviço permite que clínicas visualizem dados consolidados de redes sociais (Instagram, TikTok), analytics de site (Google Analytics), Google Meu Negócio e WhatsApp Business em um único painel.
           </p>
         </section>
 
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">3. Uso de Integrações OAuth</h2>
           <p className="text-muted-foreground leading-relaxed">
-            O DentalMetrics utiliza autenticação OAuth para acessar dados de plataformas de terceiros (Meta, Google, TikTok). Ao conectar uma integração:
+            O Zuary utiliza autenticação OAuth para acessar dados de plataformas de terceiros (Meta, Google, TikTok). Ao conectar uma integração:
           </p>
           <ul className="list-disc list-inside text-muted-foreground space-y-1">
-            <li>Você autoriza o DentalMetrics a acessar apenas os dados necessários para exibir métricas</li>
+            <li>Você autoriza o Zuary a acessar apenas os dados necessários para exibir métricas</li>
             <li>Tokens de acesso são armazenados de forma encriptografada (AES-256-GCM)</li>
             <li>Você pode revogar o acesso a qualquer momento nas configurações</li>
             <li>Nunca coletamos ou armazenamos suas senhas de plataformas externas</li>
@@ -50,7 +50,7 @@ export default function TermsPage() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">5. Propriedade Intelectual</h2>
           <p className="text-muted-foreground leading-relaxed">
-            Todo o conteúdo, código, design e funcionalidades do DentalMetrics são de propriedade exclusiva da empresa. Você não pode copiar, modificar ou distribuir qualquer parte do serviço.
+            Todo o conteúdo, código, design e funcionalidades do Zuary são de propriedade exclusiva da empresa. Você não pode copiar, modificar ou distribuir qualquer parte do serviço.
           </p>
         </section>
 
@@ -64,7 +64,7 @@ export default function TermsPage() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">7. Limitação de Responsabilidade</h2>
           <p className="text-muted-foreground leading-relaxed">
-            O DentalMetrics é uma ferramenta de visualização de dados. Não garantimos resultados específicos de marketing. Os dados exibidos dependem das APIs de terceiros e podem ter variações.
+            O Zuary é uma ferramenta de visualização de dados. Não garantimos resultados específicos de marketing. Os dados exibidos dependem das APIs de terceiros e podem ter variações.
           </p>
         </section>
 

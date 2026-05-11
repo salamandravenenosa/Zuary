@@ -11,9 +11,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "DentalMetrics — Dashboard de Métricas",
+  title: "Zuary Dashboard — Métricas de Marketing",
   description:
-    "Dashboard de métricas de sucesso para clínicas odontológicas.",
+    "Dashboard de métricas de marketing digital para clínicas odontológicas.",
 };
 
 export default function RootLayout({

@@ -1,9 +1,9 @@
-# DentalMetrics — Documentação de Aprovação para Plataformas
+# Zuary — Documentação de Aprovação para Plataformas
 # Guia completo para maximizar taxa de aprovação
 
 ## Visão Geral
 
-O DentalMetrics é um SaaS B2B de dashboard de métricas de marketing digital para clínicas odontológicas. 
+O Zuary é um SaaS B2B de dashboard de métricas de marketing digital para clínicas odontológicas. 
 O sistema é usado por agências de marketing para mostrar resultados para seus clientes clínicas.
 
 ---
@@ -35,7 +35,7 @@ O sistema é usado por agências de marketing para mostrar resultados para seus 
 ### Texto para "How will your app use this data?"
 
 ```
-DentalMetrics uses Instagram data to provide marketing analytics dashboards for dental clinics.
+Zuary uses Instagram data to provide marketing analytics dashboards for dental clinics.
 The app reads follower counts, post engagement metrics, and reach data to display consolidated
 marketing performance reports. Data is stored encrypted (AES-256-GCM) and is only accessible
 by the clinic that authorized the connection. No data is shared with third parties, used for
@@ -65,7 +65,7 @@ marketing budget allocation.
 ### Conta de Teste para Reviewer
 
 ```
-Email: reviewer@dentalmetrics.com.br
+Email: reviewer@zuary.com.br
 Senha: Reviewer2026!
 Clínica: Clínica Sorriso (sandbox)
 Instagram de teste: @clinicasorriso_test
@@ -84,18 +84,18 @@ Instagram de teste: @clinicasorriso_test
 
 ### OAuth Consent Screen
 
-- **App Name**: DentalMetrics
-- **User Support Email**: suporte@dentalmetrics.com.br
-- **Developer Email**: contato@dentalmetrics.com.br
+- **App Name**: Zuary
+- **User Support Email**: suporte@zuary.com.br
+- **Developer Email**: contato@zuary.com.br
 - **Scopes**: Analytics read-only, Business manage
-- **Homepage**: https://dentalmetrics.com.br
-- **Privacy Policy**: https://dentalmetrics.com.br/legal/privacy
-- **Terms of Service**: https://dentalmetrics.com.br/legal/terms
+- **Homepage**: https://zuary.com.br
+- **Privacy Policy**: https://zuary.com.br/legal/privacy
+- **Terms of Service**: https://zuary.com.br/legal/terms
 
 ### Texto para "Data Usage"
 
 ```
-DentalMetrics accesses Google Analytics data solely to display marketing performance 
+Zuary accesses Google Analytics data solely to display marketing performance 
 metrics to dental clinic owners and their marketing agencies. The app reads session counts, 
 traffic sources, page views, and bounce rates. No user-level data is collected or stored. 
 All data is encrypted at rest using AES-256-GCM. The app does not export, sell, or share 
@@ -123,7 +123,7 @@ data with third parties.
 ### Texto para App Review
 
 ```
-DentalMetrics is a B2B analytics dashboard for dental clinics. We use the TikTok Display 
+Zuary is a B2B analytics dashboard for dental clinics. We use the TikTok Display 
 API to read basic profile information (follower count, video count) and video metrics 
 (views, likes, comments) to display marketing performance data. The app is read-only — 
 it does not post, edit, or delete any content. Data is encrypted and stored securely 
@@ -188,7 +188,7 @@ for display purposes only.
 
 ## 7. APP ICON & BRANDING
 
-- **App Icon**: Logo DentalMetrics (512x512, fundo #7C3AED)
+- **App Icon**: Logo Zuary (512x512, fundo #7C3AED)
 - **Screenshots**: Dashboard principal, conexão OAuth, relatório PDF
-- **App Name**: DentalMetrics
+- **App Name**: Zuary
 - **Tagline**: "Dashboard de métricas para clínicas odontológicas"

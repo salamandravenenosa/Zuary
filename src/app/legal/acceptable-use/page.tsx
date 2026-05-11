@@ -9,7 +9,7 @@ export default function AcceptableUsePage() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">1. Compromisso com Plataformas</h2>
           <p className="text-muted-foreground leading-relaxed">
-            O DentalMetrics é comprometido em seguir todas as políticas de plataforma do Meta, Google e TikTok. Esta política define o uso aceitável da nossa plataforma.
+            O Zuary é comprometido em seguir todas as políticas de plataforma do Meta, Google e TikTok. Esta política define o uso aceitável da nossa plataforma.
           </p>
         </section>
 
@@ -42,7 +42,7 @@ export default function AcceptableUsePage() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">4. Conformidade com Meta</h2>
           <p className="text-muted-foreground leading-relaxed">
-            O DentalMetrics usa as APIs do Meta (Instagram Graph API, Facebook Login, Conversions API) em conformidade com as Platform Policies do Meta:
+            O Zuary usa as APIs do Meta (Instagram Graph API, Facebook Login, Conversions API) em conformidade com as Platform Policies do Meta:
           </p>
           <ul className="list-disc list-inside text-muted-foreground space-y-1">
             <li>Acesso read-only para dados de métricas</li>
@@ -56,7 +56,7 @@ export default function AcceptableUsePage() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">5. Conformidade com Google</h2>
           <p className="text-muted-foreground leading-relaxed">
-            O DentalMetrics cumpre a Google API Services User Data Policy:
+            O Zuary cumpre a Google API Services User Data Policy:
           </p>
           <ul className="list-disc list-inside text-muted-foreground space-y-1">
             <li>Apenas dados necessários são solicitados (least privilege)</li>
@@ -69,7 +69,7 @@ export default function AcceptableUsePage() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">6. Conformidade com TikTok</h2>
           <p className="text-muted-foreground leading-relaxed">
-            O DentalMetrics cumpre as TikTok Developer Policies:
+            O Zuary cumpre as TikTok Developer Policies:
           </p>
           <ul className="list-disc list-inside text-muted-foreground space-y-1">
             <li>Acesso read-only para dados de perfil e métricas</li>

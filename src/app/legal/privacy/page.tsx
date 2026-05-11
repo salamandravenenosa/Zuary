@@ -10,7 +10,7 @@ export default function PrivacyPolicyPage() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">1. Introdução</h2>
           <p className="text-muted-foreground leading-relaxed">
-            O DentalMetrics (&quot;nós&quot;, &quot;nosso&quot;) opera a plataforma de dashboard de métricas de marketing digital para clínicas odontológicas. Esta Política de Privacidade descreve como coletamos, usamos, armazenamos e protegemos suas informações pessoais, em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018), o Regulamento Geral de Proteção de Dados (GDPR) da União Europeia, e as políticas de plataforma do Meta, Google e TikTok.
+            O Zuary (&quot;nós&quot;, &quot;nosso&quot;) opera a plataforma de dashboard de métricas de marketing digital para clínicas odontológicas. Esta Política de Privacidade descreve como coletamos, usamos, armazenamos e protegemos suas informações pessoais, em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018), o Regulamento Geral de Proteção de Dados (GDPR) da União Europeia, e as políticas de plataforma do Meta, Google e TikTok.
           </p>
         </section>
 

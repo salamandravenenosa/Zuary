@@ -368,7 +368,7 @@ export default function RelatorioPage() {
                 {/* Footer */}
                 <div className="pt-6 border-t border-gray-100 text-center">
                   <p className="text-xs text-gray-400">
-                    Relatório gerado por DentalMetrics · {new Date().toLocaleDateString("pt-BR")}
+                    Relatório gerado por Zuary · {new Date().toLocaleDateString("pt-BR")}
                   </p>
                 </div>
               </div>

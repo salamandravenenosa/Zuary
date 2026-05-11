@@ -1,4 +1,4 @@
-# DentalMetrics — Dashboard de Métricas para Clínicas Odontológicas
+# Zuary — Dashboard de Métricas para Clínicas Odontológicas
 
 Dashboard completo de métricas de sucesso para clientes de agência de marketing digital voltada para clínicas odontológicas. Mostra resultados de forma clara, bonita e em tempo real para que o cliente veja o valor do serviço contratado.
 

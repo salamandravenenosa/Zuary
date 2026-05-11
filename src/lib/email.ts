@@ -21,7 +21,7 @@ export interface SendEmailParams {
 export async function sendEmail(params: SendEmailParams): Promise<boolean> {
   try {
     await transporter.sendMail({
-      from: process.env.EMAIL_FROM || "DentalMetrics <noreply@dentalmetrics.com.br>",
+      from: process.env.EMAIL_FROM || "Zuary <noreply@dentalmetrics.com.br>",
       to: params.to,
       subject: params.subject,
       html: params.html,
@@ -39,10 +39,10 @@ export async function sendEmail(params: SendEmailParams): Promise<boolean> {
 export function welcomeEmail(name: string, loginUrl: string): SendEmailParams & { subject: string } {
   return {
     to: "",
-    subject: "Bem-vindo ao DentalMetrics!",
+    subject: "Bem-vindo ao Zuary!",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h1 style="color: #7C3AED;">Bem-vindo ao DentalMetrics! 🎉</h1>
+        <h1 style="color: #7C3AED;">Bem-vindo ao Zuary! 🎉</h1>
         <p>Olá ${name},</p>
         <p>Sua conta foi criada com sucesso. Você já pode acessar o dashboard de métricas da sua clínica.</p>
         <a href="${loginUrl}" style="display: inline-block; background: #7C3AED; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 16px 0;">Acessar Dashboard</a>

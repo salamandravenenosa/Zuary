@@ -9,7 +9,7 @@ export default function DataDeletionPage() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">Como Solicitar a Exclusão dos Seus Dados</h2>
           <p className="text-muted-foreground leading-relaxed">
-            De acordo com a LGPD (Lei nº 13.709/2018) e as políticas de plataforma do Meta, Google e TikTok, você tem o direito de solicitar a exclusão completa dos seus dados pessoais do DentalMetrics.
+            De acordo com a LGPD (Lei nº 13.709/2018) e as políticas de plataforma do Meta, Google e TikTok, você tem o direito de solicitar a exclusão completa dos seus dados pessoais do Zuary.
           </p>
         </section>
 
@@ -46,7 +46,7 @@ export default function DataDeletionPage() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">Revogação de Acesso OAuth</h2>
           <p className="text-muted-foreground leading-relaxed">
-            Ao solicitar a exclusão, todos os tokens de acesso OAuth são imediatamente revogados nas plataformas correspondentes (Meta, Google, TikTok). Issoremove qualquer acesso que o DentalMetrics tenha às suas contas externas.
+            Ao solicitar a exclusão, todos os tokens de acesso OAuth são imediatamente revogados nas plataformas correspondentes (Meta, Google, TikTok). Issoremove qualquer acesso que o Zuary tenha às suas contas externas.
           </p>
           <p className="text-muted-foreground leading-relaxed mt-2">
             Você também pode revogar o acesso individualmente antes da exclusão completa, acessando <strong>Configurações → Integrações</strong> no painel.

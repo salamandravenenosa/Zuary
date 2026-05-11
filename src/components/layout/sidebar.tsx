@@ -105,7 +105,7 @@ export function Sidebar({ userRole = "CLINIC", clinicName }: SidebarProps) {
               className="overflow-hidden whitespace-nowrap"
             >
               <p className="text-sm font-bold text-white leading-none">
-                DentalMetrics
+                Zuary
               </p>
               <p className="text-[11px] text-muted-foreground mt-0.5">
                 {clinicName || "Sua Clínica"}
