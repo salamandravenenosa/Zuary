@@ -1,12 +1,11 @@
-// API route: Callback do OAuth Instagram
+// API: Callback do Instagram OAuth
 import { NextRequest, NextResponse } from "next/server";
 import { handleInstagramCallback } from "@/lib/instagram-auth";
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const code = searchParams.get("code");
-  const state = searchParams.get("state"); // clinicId
-  const error = searchParams.get("error");
+  const code = request.nextUrl.searchParams.get("code");
+  const state = request.nextUrl.searchParams.get("state");
+  const error = request.nextUrl.searchParams.get("error");
 
   if (error) {
     return NextResponse.redirect(new URL(`/dashboard/integrations?error=instagram_auth_failed`, request.url));

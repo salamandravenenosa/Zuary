@@ -77,8 +77,10 @@ const integrationConfigs = [
 export default function IntegrationsPage() {
   const [statuses, setStatuses] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
+  const [clinicId, setClinicId] = useState("");
 
   useEffect(() => {
+    // Busca status das integrações
     fetch("/api/integrations/status")
       .then((r) => r.json())
       .then((data) => {
@@ -88,6 +90,14 @@ export default function IntegrationsPage() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+
+    // Busca clinicId do usuário
+    fetch("/api/auth/session")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.user?.clinicId) setClinicId(data.user.clinicId);
+      })
+      .catch(() => {});
   }, []);
 
   const getStatusBadge = (status: string) => {
@@ -99,7 +109,9 @@ export default function IntegrationsPage() {
   };
 
   const handleConnect = (oauthUrl: string) => {
-    window.location.href = oauthUrl;
+    // Adiciona clinicId na URL
+    const separator = oauthUrl.includes("?") ? "&" : "?";
+    window.location.href = `${oauthUrl}${separator}clinicId=${clinicId}`;
   };
 
   return (

@@ -1,26 +1,20 @@
-// API route: OAuth callback do Google (Analytics + Business Profile)
+// API: Redireciona para Google OAuth
 import { NextRequest, NextResponse } from "next/server";
-import { handleGoogleCallback } from "@/lib/google-auth";
 
-// GET handler — callback do OAuth
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const code = searchParams.get("code");
-  const state = searchParams.get("state");
-  const error = searchParams.get("error");
+export async function GET(req: NextRequest) {
+  const clinicId = req.nextUrl.searchParams.get("clinicId") || "";
 
-  if (error) {
-    return NextResponse.redirect(new URL(`/admin?error=google_auth_failed`, request.url));
-  }
-  if (!code || !state) {
-    return NextResponse.redirect(new URL(`/admin?error=missing_params`, request.url));
-  }
+  const params = new URLSearchParams({
+    client_id: process.env.GOOGLE_CLIENT_ID || "",
+    redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/integrations/google/callback`,
+    scope: "openid email profile https://www.googleapis.com/auth/analytics.readonly https://www.googleapis.com/auth/business.manage",
+    state: clinicId,
+    response_type: "code",
+    access_type: "offline",
+    prompt: "consent",
+  });
 
-  try {
-    await handleGoogleCallback(code, state);
-    return NextResponse.redirect(new URL(`/admin?success=google_connected`, request.url));
-  } catch (err) {
-    console.error("Erro no callback Google:", err);
-    return NextResponse.redirect(new URL(`/admin?error=google_token_failed`, request.url));
-  }
+  return NextResponse.redirect(
+    `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`
+  );
 }
