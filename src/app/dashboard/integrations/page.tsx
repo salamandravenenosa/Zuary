@@ -2,7 +2,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useSearchParams } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Camera, Music2, Globe, MapPin, MessageCircle,
   Check, X, AlertTriangle, ExternalLink, RefreshCw, Unplug, Shield, Key, Loader2,
@@ -10,6 +11,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 const integrationConfigs = [
   {
@@ -75,12 +77,29 @@ const integrationConfigs = [
 ];
 
 export default function IntegrationsPage() {
+  const searchParams = useSearchParams();
   const [statuses, setStatuses] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
   const [clinicId, setClinicId] = useState("");
+  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
+  // Verifica params de sucesso/erro na URL
   useEffect(() => {
-    // Busca status das integrações
+    const success = searchParams.get("success");
+    const error = searchParams.get("error");
+    if (success) {
+      setNotification({ type: "success", message: `Integração conectada com sucesso!` });
+      // Limpa a URL
+      window.history.replaceState({}, "", "/dashboard/integrations");
+    }
+    if (error) {
+      setNotification({ type: "error", message: decodeURIComponent(error) });
+      window.history.replaceState({}, "", "/dashboard/integrations");
+    }
+  }, [searchParams]);
+
+  // Busca dados
+  const fetchData = () => {
     fetch("/api/integrations/status")
       .then((r) => r.json())
       .then((data) => {
@@ -91,14 +110,23 @@ export default function IntegrationsPage() {
       })
       .catch(() => setLoading(false));
 
-    // Busca clinicId do usuário
     fetch("/api/auth/session")
       .then((r) => r.json())
       .then((data) => {
         if (data?.user?.clinicId) setClinicId(data.user.clinicId);
       })
       .catch(() => {});
-  }, []);
+  };
+
+  useEffect(() => { fetchData(); }, []);
+
+  // Auto-refresh após notificação de sucesso
+  useEffect(() => {
+    if (notification?.type === "success") {
+      const timer = setTimeout(() => fetchData(), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -116,6 +144,26 @@ export default function IntegrationsPage() {
 
   return (
     <div className="space-y-6">
+      {/* Notificação */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={{ opacity: 0, y: -10, height: 0 }}
+            className={cn(
+              "flex items-center gap-3 p-4 rounded-xl border",
+              notification.type === "success"
+                ? "bg-[#10B981]/10 border-[#10B981]/20 text-[#10B981]"
+                : "bg-[#EF4444]/10 border-[#EF4444]/20 text-[#EF4444]"
+            )}
+          >
+            {notification.type === "success" ? <Check className="h-5 w-5" /> : <AlertTriangle className="h-5 w-5" />}
+            <span className="text-sm font-medium">{notification.message}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div>
         <h1 className="text-2xl font-bold text-foreground">Integrações</h1>
         <p className="text-sm text-muted-foreground mt-1">Conecte suas plataformas via OAuth seguro</p>
