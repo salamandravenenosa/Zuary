@@ -17,7 +17,7 @@ export default function AcceptableUsePage() {
           <h2 className="text-xl font-semibold text-white mb-3">2. Uso Permitido</h2>
           <ul className="list-disc list-inside text-muted-foreground space-y-1">
             <li>Visualizar métricas de marketing da sua própria conta</li>
-            <li>Gerar relatórios para uso interno da sua clínica</li>
+            <li>Gerar relatórios para uso interno da sua empresa</li>
             <li>Definir metas de marketing baseadas nos dados</li>
             <li>Conectar suas próprias contas de redes sociais via OAuth</li>
           </ul>

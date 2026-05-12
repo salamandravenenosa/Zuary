@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
   // Processa cada evento
   for (const entry of data.data || []) {
     for (const event of entry.events || []) {
-      // Busca a clínica pelo pixel ID
+      // Busca a empresa pelo pixel ID
       const integration = await prisma.integration.findFirst({
         where: {
           type: "META_PIXEL",

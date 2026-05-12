@@ -29,7 +29,7 @@ import {
 
 // Dados mockados para o relatório
 const reportData = {
-  clinica: "Clínica Sorriso Odontologia",
+  clinica: "Empresa Sorriso Odontologia",
   periodo: "Abril 2026",
   resumoExecutivo: {
     sessoes: 4832,
@@ -128,7 +128,7 @@ export default function RelatorioPage() {
             <CardContent className="space-y-4">
               <div>
                 <label className="text-sm text-muted-foreground mb-2 block">
-                  Clínica
+                  Empresa
                 </label>
                 <div className="flex items-center gap-2 p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
                   <Building2 className="h-4 w-4 text-[#7C3AED]" />

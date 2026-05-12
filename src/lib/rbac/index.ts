@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 // Definição de papéis e permissões
 export const ROLES = {
   CLINIC: {
-    label: "Clínica",
+    label: "Empresa",
     permissions: [
       "dashboard:read",
       "metrics:read",
@@ -104,7 +104,7 @@ export function requirePermission(permission: Permission) {
 }
 
 // Middleware de isolamento multi-tenant
-// Garante que usuário só acesse dados da sua clínica
+// Garante que usuário só acesse dados da sua empresa
 export function requireClinicAccess(
   handler: (req: NextRequest, context: { user: any }) => Promise<NextResponse>
 ) {
@@ -117,12 +117,12 @@ export function requireClinicAccess(
       return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
     }
 
-    // Admin pode acessar qualquer clínica
+    // Admin pode acessar qualquer empresa
     if (userRole === "ADMIN") {
       return handler(req, { user: { id: userId, role: userRole, clinicId: userClinicId } });
     }
 
-    // Outras roles só acessam a própria clínica
+    // Outras roles só acessam a própria empresa
     // O clinicId da requisição deve ser validado no handler
     return handler(req, { user: { id: userId, role: userRole, clinicId: userClinicId } });
   };

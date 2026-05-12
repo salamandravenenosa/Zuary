@@ -36,7 +36,7 @@ export const rateLimiters = {
     prefix: "rl:webhook",
   }),
 
-  // CRUD de clínicas — 10 req/min
+  // CRUD de empresas — 10 req/min
   admin: new Ratelimit({
     redis,
     limiter: Ratelimit.slidingWindow(10, "60 s"),

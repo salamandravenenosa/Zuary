@@ -3,7 +3,7 @@
 
 // Nomes de negócios para randomizar
 const businessNames = [
-  "Studio Beauty", "Clínica Sorriso", "Barbearia Old School", "Restaurante Sabor",
+  "Studio Beauty", "Empresa Sorriso", "Barbearia Old School", "Restaurante Sabor",
   "Loja Fashion", "Academia Force", "Pet Shop Amigo", "Escritório Advocacia",
   "Farmácia Saúde", "Auto Mecânica Total",
 ];

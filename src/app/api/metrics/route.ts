@@ -16,9 +16,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "clinicId é obrigatório" }, { status: 400 });
     }
 
-    // Verifica acesso à clínica
+    // Verifica acesso à empresa
     if (!hasClinicAccess(user, clinicId)) {
-      return NextResponse.json({ error: "Sem acesso a esta clínica" }, { status: 403 });
+      return NextResponse.json({ error: "Sem acesso a esta empresa" }, { status: 403 });
     }
 
     const dateFrom = new Date();

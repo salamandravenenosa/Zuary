@@ -17,7 +17,7 @@ export default function DataDeletionPage() {
           <h2 className="text-xl font-semibold text-white mb-3">Dados que Serão Excluídos</h2>
           <ul className="list-disc list-inside text-muted-foreground space-y-1">
             <li>Conta de usuário (nome, email, senha hasheada)</li>
-            <li>Dados da clínica (nome, endereço, CNPJ)</li>
+            <li>Dados da empresa (nome, endereço, CNPJ)</li>
             <li>Todos os tokens OAuth encriptografados (revogados antes da exclusão)</li>
             <li>Todas as métricas e snapshots armazenados</li>
             <li>Relatórios gerados</li>
@@ -32,7 +32,7 @@ export default function DataDeletionPage() {
             <p className="text-foreground font-medium">Envie um email para:</p>
             <p className="text-[#7C3AED]">privacidade@negóciometrics.com.br</p>
             <p className="text-muted-foreground">Com o assunto: &quot;Solicitação de Exclusão de Dados&quot;</p>
-            <p className="text-muted-foreground">Inclua: Seu email cadastrado e nome da clínica</p>
+            <p className="text-muted-foreground">Inclua: Seu email cadastrado e nome da empresa</p>
           </div>
         </section>
 

@@ -258,7 +258,7 @@ async function syncGMBMetrics(token: string, accountId: string | null) {
 // CRON JOB RUNNER
 // ==========================================
 
-// Executa sync para todas as clínicas ativas
+// Executa sync para todas as empresas ativas
 export async function runSyncJob(): Promise<void> {
   const activeClinics = await prisma.clinic.findMany({
     where: { active: true },

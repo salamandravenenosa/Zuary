@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  // Se ainda não tem clinicId, cria uma clínica padrão
+  // Se ainda não tem clinicId, cria uma empresa padrão
   if (!clinicId) {
     const token = req.cookies.get("authjs.session-token")?.value || req.cookies.get("__Secure-authjs.session-token")?.value;
     if (token) {
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
         // Busca o usuário
         const user = await prisma.user.findUnique({ where: { id: userId } });
         if (user && !user.clinicId) {
-          // Cria uma clínica padrão
+          // Cria uma empresa padrão
           const clinic = await prisma.clinic.create({
             data: {
               name: user.name || "Meu Negócio",
@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
               primaryColor: "#7C3AED",
             },
           });
-          // Vincula o usuário à clínica
+          // Vincula o usuário à empresa
           await prisma.user.update({
             where: { id: userId },
             data: { clinicId: clinic.id },

@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!clinic) {
-      return NextResponse.json({ error: "Clínica não encontrada" }, { status: 404 });
+      return NextResponse.json({ error: "Empresa não encontrada" }, { status: 404 });
     }
 
     const previousMonth = month === 1 ? 12 : month - 1;

@@ -38,8 +38,8 @@ export default function SettingsPage() {
             </div>
           </div>
           <div>
-            <label className="text-sm text-muted-foreground mb-2 block">Clínica</label>
-            <Input defaultValue="Clínica Sorriso Odontologia" />
+            <label className="text-sm text-muted-foreground mb-2 block">Empresa</label>
+            <Input defaultValue="Empresa Sorriso Odontologia" />
           </div>
           <Button size="sm" className="gap-2">
             <Save className="h-3.5 w-3.5" />

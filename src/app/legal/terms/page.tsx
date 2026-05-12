@@ -16,7 +16,7 @@ export default function TermsPage() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">2. Descrição do Serviço</h2>
           <p className="text-muted-foreground leading-relaxed">
-            O Zuary é uma plataforma SaaS de dashboard de métricas de marketing digital para empresas e negócios. O serviço permite que clínicas visualizem dados consolidados de redes sociais (Instagram, TikTok), analytics de site (Google Analytics), Google Meu Negócio e WhatsApp Business em um único painel.
+            O Zuary é uma plataforma SaaS de dashboard de métricas de marketing digital para empresas e negócios. O serviço permite que empresas visualizem dados consolidados de redes sociais (Instagram, TikTok), analytics de site (Google Analytics), Google Meu Negócio e WhatsApp Business em um único painel.
           </p>
         </section>
 

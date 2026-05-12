@@ -33,7 +33,7 @@ export const registerSchema = z.object({
     .regex(/[0-9]/, "Senha deve conter pelo menos um número"),
   clinicName: z
     .string()
-    .min(2, "Nome da clínica é obrigatório")
+    .min(2, "Nome da empresa é obrigatório")
     .max(100),
 });
 

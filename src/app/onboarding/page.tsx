@@ -1,10 +1,10 @@
 // Página de onboarding — guia o novo usuário a configurar
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Sparkles, Check, ArrowRight, Camera, Globe, MapPin, Music2 } from "lucide-react";
+import { Sparkles, Check, ArrowRight, Camera, Globe, MapPin, Music2, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,9 +12,16 @@ import { Badge } from "@/components/ui/badge";
 const steps = [
   {
     title: "Bem-vindo ao Zuary!",
-    description: "Vamos configurar sua dashboard em poucos passos. Leva menos de 2 minutos.",
+    description: "Vamos configurar sua empresa em poucos passos.",
     icon: Sparkles,
     color: "#7C3AED",
+  },
+  {
+    title: "Cadastre sua empresa",
+    description: "Dê um nome ao seu negócio para começar.",
+    icon: Building2,
+    color: "#10B981",
+    action: "/onboarding/create",
   },
   {
     title: "Conecte suas redes sociais",
@@ -48,9 +55,20 @@ const steps = [
 export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
-
   const current = steps[step];
   const isLast = step === steps.length - 1;
+
+  const handleNext = () => {
+    if (current.action) {
+      router.push(current.action);
+      return;
+    }
+    if (isLast) {
+      router.push("/dashboard/integrations");
+    } else {
+      setStep(step + 1);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center p-4">
@@ -91,12 +109,12 @@ export default function OnboardingPage() {
                 <Button variant="ghost" onClick={() => setStep(step - 1)}>Voltar</Button>
               )}
               {isLast ? (
-                <Button onClick={() => router.push("/dashboard")} className="gap-2">
-                  Ir para a Dashboard <ArrowRight className="h-4 w-4" />
+                <Button onClick={() => router.push("/dashboard/integrations")} className="gap-2">
+                  Ir para Integrações <ArrowRight className="h-4 w-4" />
                 </Button>
               ) : (
-                <Button onClick={() => setStep(step + 1)} className="gap-2">
-                  Próximo <ArrowRight className="h-4 w-4" />
+                <Button onClick={handleNext} className="gap-2">
+                  {current.action ? "Começar" : "Próximo"} <ArrowRight className="h-4 w-4" />
                 </Button>
               )}
             </div>

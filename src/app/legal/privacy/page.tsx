@@ -19,7 +19,7 @@ export default function PrivacyPolicyPage() {
           <h3 className="text-lg font-medium text-white mb-2">2.1 Dados de Cadastro</h3>
           <ul className="list-disc list-inside text-muted-foreground space-y-1">
             <li>Nome completo e endereço de email</li>
-            <li>Nome da clínica e dados de contato (telefone, endereço)</li>
+            <li>Nome da empresa e dados de contato (telefone, endereço)</li>
             <li>CNPJ (quando aplicável)</li>
           </ul>
 

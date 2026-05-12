@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    console.log(`[CRON] ${results.synced} ok, ${results.errors} erros, ${results.clinics} clínicas`);
+    console.log(`[CRON] ${results.synced} ok, ${results.errors} erros, ${results.clinics} empresas`);
     return NextResponse.json(results);
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });

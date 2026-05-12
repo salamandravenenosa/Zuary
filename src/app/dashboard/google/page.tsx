@@ -59,7 +59,7 @@ const gmbData = {
       autor: "João Santos",
       nota: 5,
       data: "2026-04-25",
-      texto: "Melhor clínica da região. Limpeza impecável e preço justo.",
+      texto: "Melhor empresa da região. Limpeza impecável e preço justo.",
       respondeu: false,
     },
     {
@@ -154,14 +154,14 @@ export default function GoogleDashboard() {
             title="Cliques p/ Ligar"
             value={gmbData.cliquesLigar}
             icon={<Phone className="h-5 w-5" />}
-            tooltip="Pessoas que clicaram no botão de ligar para sua clínica. Esses são leads quase prontos para agendar!"
+            tooltip="Pessoas que clicaram no botão de ligar para sua empresa. Esses são leads quase prontos para agendar!"
             color="#7C3AED"
           />
           <KpiCard
             title="Cliques p/ Rotas"
             value={gmbData.cliquesRotas}
             icon={<Navigation className="h-5 w-5" />}
-            tooltip="Pessoas que pediram direções até sua clínica. Indica que elas pretendem ir até lá."
+            tooltip="Pessoas que pediram direções até sua empresa. Indica que elas pretendem ir até lá."
             color="#3B82F6"
           />
           <KpiCard
@@ -231,14 +231,14 @@ export default function GoogleDashboard() {
                       />
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {((gmbData.buscasCategoria / gmbData.visualizacoes) * 100).toFixed(0)}% — pessoas que buscam "dentista" ou "clínica odontológica"
+                      {((gmbData.buscasCategoria / gmbData.visualizacoes) * 100).toFixed(0)}% — pessoas que buscam "dentista" ou "empresa odontológica"
                     </p>
                   </div>
                 </div>
 
                 <div className="mt-4 p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
                   <p className="text-xs text-muted-foreground">
-                    💡 <strong className="text-foreground">Insight:</strong> Mais pessoas te encontram por categoria que por nome. Isso mostra que o SEO local está funcionando — pessoas que buscam "dentista perto de mim" estão encontrando sua clínica.
+                    💡 <strong className="text-foreground">Insight:</strong> Mais pessoas te encontram por categoria que por nome. Isso mostra que o SEO local está funcionando — pessoas que buscam "dentista perto de mim" estão encontrando sua empresa.
                   </p>
                 </div>
               </CardContent>

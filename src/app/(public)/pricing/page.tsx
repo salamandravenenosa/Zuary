@@ -5,7 +5,7 @@ export default function PricingPage() {
       <div className="text-center">
         <h1 className="text-4xl font-bold text-white mb-4">Planos e Preços</h1>
         <p className="text-lg text-muted-foreground">
-          Escolha o plano ideal para sua clínica. Comece grátis, evolua quando precisar.
+          Escolha o plano ideal para sua empresa. Comece grátis, evolua quando precisar.
         </p>
       </div>
 
@@ -54,7 +54,7 @@ export default function PricingPage() {
           <p className="text-sm text-muted-foreground mb-6">por mês</p>
           <ul className="space-y-3 text-sm text-muted-foreground mb-6">
             <li>✓ Tudo do Pro</li>
-            <li>✓ Múltiplas clínicas</li>
+            <li>✓ Múltiplas empresas</li>
             <li>✓ API de acesso</li>
             <li>✓ White-label</li>
             <li>✓ Suporte prioritário</li>

@@ -237,7 +237,7 @@ export default function SocialDashboard() {
               value={tiktokData.seguidores}
               previousValue={tiktokData.seguidoresAnterior}
               icon={<Users className="h-5 w-5" />}
-              tooltip="Pessoas que te seguem no TikTok. O TikTok tem ótimo alcance orgânico para clínicas."
+              tooltip="Pessoas que te seguem no TikTok. O TikTok tem ótimo alcance orgânico para empresas."
               color="#000000"
             />
             <KpiCard

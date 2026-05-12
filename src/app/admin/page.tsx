@@ -50,12 +50,12 @@ const metricOptions = [
 const mockClients = [
   {
     id: "1",
-    name: "Clínica Sorriso Odontologia",
+    name: "Empresa Sorriso Odontologia",
     slug: "clinica-sorriso",
     integrations: {
       INSTAGRAM: { status: "CONNECTED", platformName: "@clinicasorriso" },
       GOOGLE_ANALYTICS: { status: "CONNECTED", platformName: "GA4 - Sorriso" },
-      GOOGLE_BUSINESS: { status: "CONNECTED", platformName: "Clínica Sorriso" },
+      GOOGLE_BUSINESS: { status: "CONNECTED", platformName: "Empresa Sorriso" },
       TIKTOK: { status: "DISCONNECTED" },
       META_PIXEL: { status: "ERROR", errorMessage: "Token expirado" },
       WHATSAPP_BUSINESS: { status: "CONNECTED" },
@@ -135,14 +135,14 @@ export default function AdminPage() {
             </div>
             <Button onClick={() => setShowNewClient(true)} className="gap-2">
               <Plus className="h-4 w-4" />
-              Nova Clínica
+              Nova Empresa
             </Button>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-6">
-        {/* Modal nova clínica */}
+        {/* Modal nova empresa */}
         <AnimatePresence>
           {showNewClient && (
             <motion.div
@@ -154,11 +154,11 @@ export default function AdminPage() {
               <Card className="border-[#7C3AED]/20 bg-[#7C3AED]/[0.03]">
                 <CardContent className="p-6">
                   <h3 className="text-lg font-semibold text-white mb-4">
-                    Cadastrar Nova Clínica
+                    Cadastrar Nova Empresa
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Input
-                      placeholder="Nome da clínica"
+                      placeholder="Nome da empresa"
                       value={newClientName}
                       onChange={(e) => setNewClientName(e.target.value)}
                     />
