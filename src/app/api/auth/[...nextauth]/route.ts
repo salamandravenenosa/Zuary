@@ -64,6 +64,7 @@ const authConfig = NextAuth({
         if (email) {
           let dbUser = await prisma.user.findUnique({ where: { email } });
           if (!dbUser) {
+            // Cria usuário
             dbUser = await prisma.user.create({
               data: {
                 email,
@@ -74,6 +75,22 @@ const authConfig = NextAuth({
                 avatarUrl: user.image || null,
               },
             });
+
+            // Cria empresa padrão automaticamente
+            const clinic = await prisma.clinic.create({
+              data: {
+                name: user.name || "Meu Negócio",
+                slug: `negocio-${Date.now().toString(36)}`,
+                primaryColor: "#7C3AED",
+              },
+            });
+
+            await prisma.user.update({
+              where: { id: dbUser.id },
+              data: { clinicId: clinic.id },
+            });
+
+            dbUser.clinicId = clinic.id;
           }
           token.role = dbUser.role;
           token.clinicId = dbUser.clinicId;

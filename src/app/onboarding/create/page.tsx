@@ -145,6 +145,9 @@ export default function CreateBusinessPage() {
                     Criar Empresa
                   </Button>
                 </div>
+                <button onClick={handleCreate} className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Pular esta etapa
+                </button>
               </motion.div>
             )}
           </CardContent>
