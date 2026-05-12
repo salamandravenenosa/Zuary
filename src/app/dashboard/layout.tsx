@@ -1,8 +1,7 @@
-// Layout da dashboard — sidebar + header
+// Layout da dashboard — responsivo
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 
@@ -15,7 +14,6 @@ export default function DashboardLayout({
   const [clinicName, setClinicName] = useState("Meu Negócio");
   const [userRole, setUserRole] = useState("CLINIC");
 
-  // Busca dados do usuário da sessão
   useEffect(() => {
     fetch("/api/auth/session")
       .then((r) => r.json())
@@ -29,15 +27,11 @@ export default function DashboardLayout({
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F]">
+    <div className="min-h-screen bg-background">
       <Sidebar userRole={userRole} clinicName={clinicName} />
-      <div className="pl-[260px] transition-all duration-200">
-        <Header
-          clinicName={clinicName}
-          period={period}
-          onPeriodChange={setPeriod}
-        />
-        <main className="p-6">{children}</main>
+      <div className="lg:pl-[260px] transition-all duration-200">
+        <Header clinicName={clinicName} period={period} onPeriodChange={setPeriod} />
+        <main className="p-4 lg:p-6">{children}</main>
       </div>
     </div>
   );
