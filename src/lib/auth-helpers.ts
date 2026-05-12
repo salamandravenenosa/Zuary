@@ -20,12 +20,21 @@ function getTokenFromRequest(request: NextRequest): string | null {
   );
 }
 
+// Obtém a secret JWT — NUNCA usa fallback fraco
+function getJwtSecret(): string {
+  const secret = process.env.NEXTAUTH_SECRET;
+  if (!secret || secret.length < 16) {
+    throw new Error("NEXTAUTH_SECRET não configurada ou muito curta");
+  }
+  return secret;
+}
+
 export async function getAuthUser(request: NextRequest): Promise<AuthUser | null> {
   const token = getTokenFromRequest(request);
   if (!token) return null;
 
   try {
-    const decoded = jwt.verify(token, process.env.NEXTAUTH_SECRET || "fallback-secret") as any;
+    const decoded = jwt.verify(token, getJwtSecret()) as any;
     const user = await prisma.user.findUnique({
       where: { id: decoded.sub },
       select: { id: true, email: true, name: true, role: true, clinicId: true, active: true },

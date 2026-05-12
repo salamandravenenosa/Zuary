@@ -1,51 +1,62 @@
-// Página Sobre — About
+import type { Metadata } from "next";
+import { BarChart3, Lock, RefreshCw } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Sobre o dashboard de marketing",
+  description:
+    "Conheça o Zuary, um dashboard para agências mostrarem métricas de marketing de forma clara para clientes locais.",
+  alternates: {
+    canonical: "/about",
+  },
+};
+
 export default function AboutPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-16 space-y-12">
       <div>
         <h1 className="text-4xl font-bold text-white mb-4">Sobre o Zuary</h1>
         <p className="text-lg text-muted-foreground leading-relaxed">
-          Somos uma plataforma de analytics de marketing digital construída especificamente para empresas odontológicas. Nosso objetivo é tornar os dados de marketing acessíveis e acionáveis para dentistas e gestores de empresas.
+          Zuary é um dashboard de marketing para agências que precisam mostrar resultado sem depender de planilhas, prints soltos ou telas difíceis do GA4.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="p-6 rounded-xl border border-white/[0.08] bg-white/[0.02]">
           <div className="h-12 w-12 rounded-xl bg-[#7C3AED]/15 flex items-center justify-center mb-4">
-            <span className="text-2xl">📊</span>
+            <BarChart3 className="h-6 w-6 text-[#7C3AED]" />
           </div>
-          <h3 className="text-lg font-semibold text-white mb-2">Dados Claros</h3>
+          <h2 className="text-lg font-semibold text-white mb-2">Dados claros</h2>
           <p className="text-sm text-muted-foreground">
-            Métricas de Instagram, TikTok, Google Analytics e Google Maps em um só lugar, traduzidas para linguagem simples.
+            Instagram, TikTok, Google Analytics e Google Maps em uma visão que o cliente entende.
           </p>
         </div>
         <div className="p-6 rounded-xl border border-white/[0.08] bg-white/[0.02]">
-          <div className="h-12 w-12 rounded-xl bg-[#10B981]/15 flex items-center justify-center mb-4">
-            <span className="text-2xl">🔒</span>
+          <div className="h-12 w-12 rounded-xl bg-[#7C3AED]/15 flex items-center justify-center mb-4">
+            <Lock className="h-6 w-6 text-[#7C3AED]" />
           </div>
-          <h3 className="text-lg font-semibold text-white mb-2">Seguro</h3>
+          <h2 className="text-lg font-semibold text-white mb-2">Conexões seguras</h2>
           <p className="text-sm text-muted-foreground">
-            Tokens encriptografados com AES-256-GCM. Senhas nunca são coletadas. Conexões via OAuth oficial das plataformas.
+            As integrações usam OAuth. Os tokens ficam criptografados no banco.
           </p>
         </div>
         <div className="p-6 rounded-xl border border-white/[0.08] bg-white/[0.02]">
-          <div className="h-12 w-12 rounded-xl bg-[#F59E0B]/15 flex items-center justify-center mb-4">
-            <span className="text-2xl">⚡</span>
+          <div className="h-12 w-12 rounded-xl bg-[#7C3AED]/15 flex items-center justify-center mb-4">
+            <RefreshCw className="h-6 w-6 text-[#7C3AED]" />
           </div>
-          <h3 className="text-lg font-semibold text-white mb-2">Tempo Real</h3>
+          <h2 className="text-lg font-semibold text-white mb-2">Coleta automática</h2>
           <p className="text-sm text-muted-foreground">
-            Dados atualizados automaticamente via cron jobs. Sem necessidade de atualizar a página.
+            O cron busca dados novos e salva snapshots para o dashboard.
           </p>
         </div>
       </div>
 
       <div className="p-8 rounded-xl border border-white/[0.08] bg-white/[0.02]">
-        <h2 className="text-2xl font-bold text-white mb-4">Nossa Missão</h2>
+        <h2 className="text-2xl font-bold text-white mb-4">Para que serve</h2>
         <p className="text-muted-foreground leading-relaxed mb-4">
-          Acreditamos que toda empresa odontológica merece ter acesso profissional a métricas de marketing, sem precisar de um time de数据分析 dedicado. O Zuary traduz dados complexos em insights acionáveis que ajudam empresas a crescer.
+          O Zuary ajuda a agência a provar o trabalho do mês. O cliente vê sessões, seguidores, avaliações, leads e relatórios sem entrar nas ferramentas de origem.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          Trabalhamos em conformidade total com as políticas de plataforma do Meta, Google e TikTok, garantindo que seus dados estejam sempre seguros e que o serviço seja utilizado de forma ética e responsável.
+          A interface foi feita para negócios locais, principalmente clínicas e empresas que querem saber se o marketing está trazendo movimento.
         </p>
       </div>
     </div>

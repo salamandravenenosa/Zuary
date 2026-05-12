@@ -1,6 +1,6 @@
-// Layout para páginas públicas (About, Contact, Pricing, Legal)
+// Layout para páginas públicas
+import Image from "next/image";
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
 
 export default function PublicLayout({
   children,
@@ -13,9 +13,7 @@ export default function PublicLayout({
       <header className="border-b border-white/[0.08] bg-[#0A0A0F]/80 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-[#7C3AED] flex items-center justify-center">
-              <Sparkles className="h-4 w-4 text-white" />
-            </div>
+            <Image src="/icon-1024.png" alt="Zuary" width={34} height={34} className="h-8 w-8 rounded-lg" />
             <span className="text-lg font-bold text-white">Zuary</span>
           </Link>
           <nav className="flex items-center gap-6 text-sm">
@@ -35,13 +33,11 @@ export default function PublicLayout({
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="h-8 w-8 rounded-lg bg-[#7C3AED] flex items-center justify-center">
-                  <Sparkles className="h-4 w-4 text-white" />
-                </div>
+                <Image src="/icon-1024.png" alt="Zuary" width={34} height={34} className="h-8 w-8 rounded-lg" />
                 <span className="text-lg font-bold text-white">Zuary</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                Dashboard de métricas de marketing digital. Monitore suas métricas em um só lugar.
+                Dashboard de marketing para agências que atendem clínicas e negócios locais.
               </p>
             </div>
             <div>
@@ -65,8 +61,8 @@ export default function PublicLayout({
             <div>
               <h4 className="text-sm font-semibold text-white mb-3">Contato</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>contato@dentalmetrics.com.br</li>
-                <li>suporte@dentalmetrics.com.br</li>
+                <li>contato@zuary.vercel.app</li>
+                <li>suporte@zuary.vercel.app</li>
                 <li>São Paulo, SP — Brasil</li>
               </ul>
             </div>

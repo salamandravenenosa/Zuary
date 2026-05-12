@@ -1,4 +1,4 @@
-// Página /dashboard/site — Google Analytics 4 com dados reais
+// Página /dashboard/site: Google Analytics 4 com dados reais
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -11,7 +11,6 @@ import {
   Globe,
   MousePointerClick,
   Plug,
-  Route,
   Users,
 } from "lucide-react";
 import { DashboardPageShell } from "@/components/dashboard/page-shell";
@@ -91,7 +90,7 @@ function trafficLabel(label: string) {
     "Paid Search": "Pago",
     Social: "Social",
     "Organic Social": "Social",
-    Unassigned: "Nao atribuido",
+    Unassigned: "Não atribuído",
     unknown: "Desconhecido",
   };
 
@@ -118,12 +117,12 @@ function SiteEmptyState({ connected }: { connected: boolean }) {
           </div>
           <div>
             <h3 className="font-semibold text-foreground">
-              {connected ? "GA4 conectado, aguardando dados" : "Google Analytics ainda nao conectado"}
+              {connected ? "GA4 conectado" : "Google Analytics não conectado"}
             </h3>
             <p className="mt-1 max-w-xl text-sm leading-6 text-muted-foreground">
               {connected
-                ? "A integração existe, mas ainda nao ha snapshot de metricas. Rode a coleta ou aguarde o cron."
-                : "Conecte o GA4 para acompanhar sessões, usuários, origem de tráfego e funil real."}
+                ? "Ainda não há métricas salvas. Aguarde a próxima coleta."
+                : "Conecte o GA4 para ver sessões, usuários e origem de tráfego."}
             </p>
           </div>
         </div>
@@ -147,7 +146,7 @@ export default function SiteDashboard() {
 
     fetch("/api/dashboard", { credentials: "include" })
       .then(async (response) => {
-        if (!response.ok) throw new Error("Nao foi possivel carregar os dados do site.");
+        if (!response.ok) throw new Error("Não deu para carregar os dados do site.");
         return response.json();
       })
       .then((payload: DashboardResponse) => {
@@ -209,25 +208,25 @@ export default function SiteDashboard() {
   if (error) {
     return (
       <DashboardPageShell
-        eyebrow="Site cockpit"
+        eyebrow="Site"
         title="Site & Analytics"
-        description="GA4 conectado ao banco de dados do Zuary."
+        description="Métricas do GA4 no Zuary."
         icon={<Globe className="h-5 w-5" />}
         status={{ label: "Erro ao carregar", tone: "danger" }}
       >
-        <EmptyState title="Nao foi possivel carregar os dados" description={error} actionLabel="Ver integrações" actionHref="/dashboard/integrations" />
+        <EmptyState title="Não deu para carregar os dados" description={error} actionLabel="Ver integrações" actionHref="/dashboard/integrations" />
       </DashboardPageShell>
     );
   }
 
   return (
     <DashboardPageShell
-      eyebrow="Site cockpit"
+      eyebrow="Site"
       title="Site & Analytics"
-      description="Sessões, usuários, trafego e conversões reais vindos dos snapshots do Google Analytics 4."
+      description="Tráfego, canais e conversão sem número inventado."
       icon={<Globe className="h-5 w-5" />}
       status={{
-        label: loading ? "Sincronizando" : ga ? "Dados reais GA4" : "Sem dados GA4",
+        label: loading ? "Sincronizando" : ga ? "Atualizado" : "Sem dados",
         tone: loading ? "default" : ga ? "success" : "warning",
       }}
     >
@@ -235,10 +234,10 @@ export default function SiteDashboard() {
         <LoadingGrid />
       ) : ga ? (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <KpiCard title="Sessões" value={ga.sessions ?? 0} icon={<MousePointerClick className="h-5 w-5" />} tooltip="Sessões reais coletadas do Google Analytics 4." color="#7C3AED" />
-          <KpiCard title="Usuários" value={ga.totalUsers ?? 0} icon={<Users className="h-5 w-5" />} tooltip="Usuários distintos reportados pelo GA4 no período coletado." color="#22D3EE" />
-          <KpiCard title="Taxa de Rejeição" value={ga.bounceRate ?? 0} suffix="%" icon={<ArrowDownRight className="h-5 w-5" />} tooltip="Taxa de rejeição vinda do GA4. Quanto menor, melhor." color="#F59E0B" formatAsDecimal />
-          <KpiCard title="Tempo Médio" value={ga.averageSessionDuration ?? 0} suffix="s" icon={<Clock className="h-5 w-5" />} tooltip={`Tempo medio: ${formatDuration(ga.averageSessionDuration ?? 0)}.`} color="#A855F7" />
+          <KpiCard title="Sessões" value={ga.sessions ?? 0} icon={<MousePointerClick className="h-5 w-5" />} tooltip="Visitas registradas pelo GA4." color="#7C3AED" />
+          <KpiCard title="Usuários" value={ga.totalUsers ?? 0} icon={<Users className="h-5 w-5" />} tooltip="Pessoas únicas no período." color="#22D3EE" />
+          <KpiCard title="Rejeição" value={ga.bounceRate ?? 0} suffix="%" icon={<ArrowDownRight className="h-5 w-5" />} tooltip="Sessões sem interação." color="#F59E0B" formatAsDecimal />
+          <KpiCard title="Tempo médio" value={ga.averageSessionDuration ?? 0} suffix="s" icon={<Clock className="h-5 w-5" />} tooltip={formatDuration(ga.averageSessionDuration ?? 0)} color="#A855F7" />
         </motion.div>
       ) : (
         <SiteEmptyState connected={connected} />
@@ -289,7 +288,7 @@ export default function SiteDashboard() {
               </div>
               {!hasRealFunnel ? (
                 <div className="mt-5 rounded-xl border border-amber-500/20 bg-amber-500/10 p-4 text-sm leading-6 text-amber-200 dark:text-amber-200">
-                  O GA4 já envia sessões e usuários. Para funil completo, configure eventos reais como leads, WhatsApp, formulário ou agendamentos na coleta.
+                  Faltam eventos de lead ou agendamento. Sem eles, o funil fica incompleto.
                 </div>
               ) : null}
             </CardContent>
@@ -335,7 +334,7 @@ export default function SiteDashboard() {
                   </div>
                 </>
               ) : (
-                <p className="py-12 text-center text-sm text-muted-foreground">Origens de trafego aparecerão após a próxima sincronização.</p>
+                <p className="py-12 text-center text-sm text-muted-foreground">As origens aparecem na próxima coleta.</p>
               )}
             </CardContent>
           </Card>

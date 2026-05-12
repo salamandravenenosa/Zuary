@@ -1,5 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /forgot-password/
+Disallow: /login/
+Disallow: /onboarding/
+Disallow: /reset-password/
 
 User-agent: facebookexternalhit
 Allow: /

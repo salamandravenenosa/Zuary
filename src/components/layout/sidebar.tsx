@@ -1,4 +1,4 @@
-// Sidebar colapsável — mobile + desktop + logout
+// Sidebar colapsável para mobile, desktop e logout
 "use client";
 
 import React, { useState } from "react";

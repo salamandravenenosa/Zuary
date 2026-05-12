@@ -118,7 +118,7 @@ export function ChannelSection({
           </div>
         </div>
         <Badge variant={connected ? "success" : "warning"}>
-          {connected ? "Conectado" : "Aguardando conexão"}
+          {connected ? "Conectado" : "Não conectado"}
         </Badge>
       </div>
       {children}

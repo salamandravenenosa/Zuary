@@ -1,4 +1,4 @@
-// Header — tema + período + notificações
+// Header com tema, período e notificações
 "use client";
 
 import React from "react";

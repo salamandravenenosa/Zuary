@@ -1,4 +1,4 @@
-// Página /dashboard/social — Instagram e TikTok com dados reais
+// Página /dashboard/social: Instagram e TikTok com dados reais
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -161,7 +161,7 @@ export default function SocialDashboard() {
 
     fetch("/api/dashboard", { credentials: "include" })
       .then(async (response) => {
-        if (!response.ok) throw new Error("Nao foi possivel carregar os dados sociais.");
+        if (!response.ok) throw new Error("Não deu para carregar os dados sociais.");
         return response.json();
       })
       .then((payload: DashboardResponse) => {
@@ -208,14 +208,14 @@ export default function SocialDashboard() {
   if (error) {
     return (
       <DashboardPageShell
-        eyebrow="Social cockpit"
+        eyebrow="Social"
         title="Redes Sociais"
-        description="Instagram e TikTok conectados ao banco de dados do Zuary."
+        description="Instagram e TikTok em um só lugar."
         icon={<Sparkles className="h-5 w-5" />}
         status={{ label: "Erro ao carregar", tone: "danger" }}
       >
         <EmptyState
-          title="Nao foi possivel carregar os dados"
+          title="Não deu para carregar os dados"
           description={error}
           actionLabel="Ver integrações"
           actionHref="/dashboard/integrations"
@@ -226,12 +226,12 @@ export default function SocialDashboard() {
 
   return (
     <DashboardPageShell
-      eyebrow="Social cockpit"
+      eyebrow="Social"
       title="Redes Sociais"
-      description="Acompanhe alcance, engajamento e conteudos recentes sem depender de dados mockados."
+      description="Veja o que cresceu, o que engajou e o que precisa de atenção."
       icon={<Sparkles className="h-5 w-5" />}
       status={{
-        label: loading ? "Sincronizando" : hasAnySocial ? "Dados reais" : "Sem dados sociais",
+        label: loading ? "Sincronizando" : hasAnySocial ? "Atualizado" : "Sem dados",
         tone: loading ? "default" : hasAnySocial ? "success" : "warning",
       }}
     >
@@ -249,16 +249,16 @@ export default function SocialDashboard() {
               title="Seguidores"
               value={totals.followers}
               icon={<Users className="h-5 w-5" />}
-              tooltip="Total de seguidores somando Instagram e TikTok conectados."
+              tooltip="Instagram e TikTok somados."
               color="#7C3AED"
             />
           </motion.div>
           <motion.div variants={itemVariants}>
             <KpiCard
-              title="Alcance Social"
+              title="Alcance"
               value={totals.reach}
               icon={<Eye className="h-5 w-5" />}
-              tooltip="Alcance do Instagram somado as visualizações recentes do TikTok."
+              tooltip="Alcance e views recentes."
               color="#22D3EE"
             />
           </motion.div>
@@ -267,7 +267,7 @@ export default function SocialDashboard() {
               title="Interações"
               value={totals.interactions}
               icon={<Heart className="h-5 w-5" />}
-              tooltip="Curtidas, comentários e compartilhamentos capturados nos conteúdos recentes."
+              tooltip="Curtidas, comentários e compartilhamentos."
               color="#EC4899"
             />
           </motion.div>
@@ -277,7 +277,7 @@ export default function SocialDashboard() {
               value={totals.engagement}
               suffix="%"
               icon={<BarChart3 className="h-5 w-5" />}
-              tooltip="Taxa consolidada de engajamento calculada a partir das interações e alcance social."
+              tooltip="Interações divididas pelo alcance."
               color="#A855F7"
               formatAsDecimal
             />
@@ -286,7 +286,7 @@ export default function SocialDashboard() {
       ) : (
         <EmptyState
           title="Nenhuma rede social com dados"
-          description="Conecte Instagram ou TikTok e aguarde a primeira sincronização para transformar esta tela em um cockpit social real."
+          description="Conecte Instagram ou TikTok. Depois da primeira coleta, os números aparecem aqui."
           actionLabel="Conectar redes sociais"
           actionHref="/dashboard/integrations"
         />
@@ -294,7 +294,7 @@ export default function SocialDashboard() {
 
       <ChannelSection
         title="Instagram"
-        description={`Ultima sincronizacao: ${getLastSync(data?.integrations, "INSTAGRAM")}`}
+        description={`Última sync: ${getLastSync(data?.integrations, "INSTAGRAM")}`}
         icon={<Camera className="h-5 w-5" />}
         accent="#C084FC"
         connected={instagramConnected}
@@ -304,10 +304,10 @@ export default function SocialDashboard() {
         ) : instagram ? (
           <>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-              <KpiCard title="Seguidores" value={instagram.followerCount ?? 0} icon={<Users className="h-5 w-5" />} tooltip="Total de seguidores capturado pela API do Instagram." color="#C084FC" />
-              <KpiCard title="Alcance" value={instagram.reach ?? 0} icon={<Eye className="h-5 w-5" />} tooltip="Pessoas unicas impactadas pelos posts recentes." color="#7C3AED" />
-              <KpiCard title="Impressões" value={instagram.impressions ?? 0} icon={<BarChart3 className="h-5 w-5" />} tooltip="Total de impressões coletadas dos posts recentes." color="#A855F7" />
-              <KpiCard title="Stories" value={instagram.storiesViews ?? 0} icon={<MessageCircle className="h-5 w-5" />} tooltip="Visualizações de stories na ultima coleta disponivel." color="#22D3EE" />
+              <KpiCard title="Seguidores" value={instagram.followerCount ?? 0} icon={<Users className="h-5 w-5" />} tooltip="Seguidores do perfil conectado." color="#C084FC" />
+              <KpiCard title="Alcance" value={instagram.reach ?? 0} icon={<Eye className="h-5 w-5" />} tooltip="Pessoas alcançadas nos posts recentes." color="#7C3AED" />
+              <KpiCard title="Impressões" value={instagram.impressions ?? 0} icon={<BarChart3 className="h-5 w-5" />} tooltip="Vezes que os posts foram exibidos." color="#A855F7" />
+              <KpiCard title="Stories" value={instagram.storiesViews ?? 0} icon={<MessageCircle className="h-5 w-5" />} tooltip="Views de stories na última coleta." color="#22D3EE" />
             </div>
 
             <Card>
@@ -341,15 +341,15 @@ export default function SocialDashboard() {
                   </table>
                 </div>
                 {(instagram.recentPosts?.length ?? 0) === 0 ? (
-                  <p className="py-8 text-center text-sm text-muted-foreground">Posts recentes aparecerão após a próxima sincronização.</p>
+                  <p className="py-8 text-center text-sm text-muted-foreground">Os posts aparecem na próxima coleta.</p>
                 ) : null}
               </CardContent>
             </Card>
           </>
         ) : (
           <ChannelEmptyState
-            title={instagramConnected ? "Instagram conectado, aguardando dados" : "Instagram ainda nao conectado"}
-            description={instagramConnected ? "A integração existe, mas ainda nao ha snapshot de metricas. Rode a coleta ou aguarde o cron." : "Conecte o Instagram para acompanhar alcance, impressões, stories e posts recentes."}
+            title={instagramConnected ? "Instagram conectado" : "Instagram não conectado"}
+            description={instagramConnected ? "Ainda não há métricas salvas. Aguarde a próxima coleta." : "Conecte o Instagram para ver alcance, impressões e posts."}
             accent="#C084FC"
           />
         )}
@@ -357,7 +357,7 @@ export default function SocialDashboard() {
 
       <ChannelSection
         title="TikTok"
-        description={`Ultima sincronizacao: ${getLastSync(data?.integrations, "TIKTOK")}`}
+        description={`Última sync: ${getLastSync(data?.integrations, "TIKTOK")}`}
         icon={<Music2 className="h-5 w-5" />}
         accent="#22D3EE"
         connected={tiktokConnected}
@@ -367,10 +367,10 @@ export default function SocialDashboard() {
         ) : tiktok ? (
           <>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-              <KpiCard title="Seguidores" value={tiktok.followerCount ?? 0} icon={<Users className="h-5 w-5" />} tooltip="Total de seguidores capturado pela API do TikTok." color="#22D3EE" />
-              <KpiCard title="Visualizações" value={tiktok.totalViews ?? 0} icon={<Eye className="h-5 w-5" />} tooltip="Visualizações somadas dos videos recentes coletados." color="#7C3AED" />
-              <KpiCard title="Curtidas" value={tiktok.totalLikes ?? tiktok.likesCount ?? 0} icon={<Heart className="h-5 w-5" />} tooltip="Curtidas totais dos videos recentes ou do perfil." color="#A855F7" />
-              <KpiCard title="Shares" value={tiktok.totalShares ?? 0} icon={<Share2 className="h-5 w-5" />} tooltip="Compartilhamentos dos videos recentes coletados." color="#C084FC" />
+              <KpiCard title="Seguidores" value={tiktok.followerCount ?? 0} icon={<Users className="h-5 w-5" />} tooltip="Seguidores do perfil conectado." color="#22D3EE" />
+              <KpiCard title="Visualizações" value={tiktok.totalViews ?? 0} icon={<Eye className="h-5 w-5" />} tooltip="Views dos vídeos recentes." color="#7C3AED" />
+              <KpiCard title="Curtidas" value={tiktok.totalLikes ?? tiktok.likesCount ?? 0} icon={<Heart className="h-5 w-5" />} tooltip="Curtidas dos vídeos recentes." color="#A855F7" />
+              <KpiCard title="Shares" value={tiktok.totalShares ?? 0} icon={<Share2 className="h-5 w-5" />} tooltip="Compartilhamentos dos vídeos recentes." color="#C084FC" />
             </div>
 
             <Card>
@@ -395,15 +395,15 @@ export default function SocialDashboard() {
                   ))}
                 </div>
                 {(tiktok.recentVideos?.length ?? 0) === 0 ? (
-                  <p className="py-8 text-center text-sm text-muted-foreground">Videos recentes aparecerão após a próxima sincronização.</p>
+                  <p className="py-8 text-center text-sm text-muted-foreground">Os vídeos aparecem na próxima coleta.</p>
                 ) : null}
               </CardContent>
             </Card>
           </>
         ) : (
           <ChannelEmptyState
-            title={tiktokConnected ? "TikTok conectado, aguardando dados" : "TikTok ainda nao conectado"}
-            description={tiktokConnected ? "A integração existe, mas ainda nao ha snapshot de metricas. Rode a coleta ou aguarde o cron." : "Conecte o TikTok para acompanhar seguidores, views, curtidas e videos recentes."}
+            title={tiktokConnected ? "TikTok conectado" : "TikTok não conectado"}
+            description={tiktokConnected ? "Ainda não há métricas salvas. Aguarde a próxima coleta." : "Conecte o TikTok para ver seguidores, views e vídeos."}
             accent="#22D3EE"
           />
         )}

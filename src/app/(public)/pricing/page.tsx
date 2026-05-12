@@ -1,11 +1,21 @@
-// Página de Preços
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Preços do dashboard de marketing",
+  description:
+    "Veja os planos do Zuary para agências que precisam acompanhar métricas e relatórios de clientes em um dashboard.",
+  alternates: {
+    canonical: "/pricing",
+  },
+};
+
 export default function PricingPage() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-16 space-y-12">
       <div className="text-center">
         <h1 className="text-4xl font-bold text-white mb-4">Planos e Preços</h1>
         <p className="text-lg text-muted-foreground">
-          Escolha o plano ideal para sua empresa. Comece grátis, evolua quando precisar.
+          Comece simples. Suba de plano quando sua operação pedir mais integrações e relatórios.
         </p>
       </div>
 
@@ -22,14 +32,14 @@ export default function PricingPage() {
             <li>✓ Relatórios mensais</li>
           </ul>
           <button className="w-full py-2.5 rounded-lg border border-white/[0.08] text-foreground text-sm font-medium hover:bg-white/[0.06] transition-colors">
-            Começar Grátis
+            Começar grátis
           </button>
         </div>
 
         {/* Plano Pro */}
         <div className="p-6 rounded-xl border border-[#7C3AED]/30 bg-[#7C3AED]/[0.03] relative">
           <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#7C3AED] text-white text-xs font-semibold">
-            Mais Popular
+            Mais usado
           </div>
           <h3 className="text-lg font-semibold text-white mb-2">Pro</h3>
           <p className="text-3xl font-bold text-white mb-1">R$ 197</p>
@@ -61,7 +71,7 @@ export default function PricingPage() {
             <li>✓ SLA 99.9%</li>
           </ul>
           <button className="w-full py-2.5 rounded-lg border border-white/[0.08] text-foreground text-sm font-medium hover:bg-white/[0.06] transition-colors">
-            Falar com Vendas
+            Falar com vendas
           </button>
         </div>
       </div>

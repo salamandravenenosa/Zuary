@@ -1,4 +1,4 @@
-// Componente de estado vazio — mostra quando não tem dados
+// Componente de estado vazio para telas sem dados
 "use client";
 
 import React from "react";
@@ -15,7 +15,7 @@ interface EmptyStateProps {
   actionHref?: string;
 }
 
-export function EmptyState({ title, description, actionLabel = "Conectar Integração", actionHref = "/dashboard/integrations" }: EmptyStateProps) {
+export function EmptyState({ title, description, actionLabel = "Conectar integração", actionHref = "/dashboard/integrations" }: EmptyStateProps) {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
       <Card className="border-dashed border-border bg-card/50">

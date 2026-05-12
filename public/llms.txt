@@ -1,0 +1,17 @@
+# Zuary
+
+> Dashboard de marketing para agências que atendem clínicas e negócios locais.
+
+Zuary reúne métricas de Instagram, TikTok, Google Analytics, Google Maps e relatórios de clientes.
+
+## Páginas principais
+
+- [Home](https://zuary.vercel.app/): visão geral do produto.
+- [Sobre](https://zuary.vercel.app/about): o que é o Zuary e para quem serve.
+- [Preços](https://zuary.vercel.app/pricing): planos disponíveis.
+- [Contato](https://zuary.vercel.app/contact): suporte, vendas e privacidade.
+
+## Áreas privadas
+
+As rotas `/dashboard`, `/admin`, `/login`, `/onboarding` e `/api` não são páginas públicas de conteúdo.
+
