@@ -2,8 +2,6 @@
 "use client";
 
 import React from "react";
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
-import { useEffect } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -33,8 +31,7 @@ interface KpiCardProps {
   formatAsDecimal?: boolean;
 }
 
-// Componente de número animado — conta de 0 até o valor final
-function AnimatedNumber({
+function FormattedNumber({
   value,
   prefix = "",
   suffix = "",
@@ -45,23 +42,8 @@ function AnimatedNumber({
   suffix?: string;
   formatAsDecimal?: boolean;
 }) {
-  const motionVal = useMotionValue(0);
-  const display = useTransform(motionVal, (latest) => {
-    const num = formatAsDecimal
-      ? latest.toFixed(1)
-      : formatNumber(Math.round(latest));
-    return `${prefix}${num}${suffix}`;
-  });
-
-  useEffect(() => {
-    const controls = animate(motionVal, value, {
-      duration: 1.5,
-      ease: [0.25, 0.46, 0.45, 0.94],
-    });
-    return controls.stop;
-  }, [value, motionVal]);
-
-  return <motion.span>{display}</motion.span>;
+  const number = formatAsDecimal ? value.toFixed(1) : formatNumber(Math.round(value));
+  return <>{prefix}{number}{suffix}</>;
 }
 
 // Badge que mostra variação vs período anterior
@@ -147,22 +129,16 @@ export function KpiCard({
 
           {/* Ícone de troféu quando atinge meta */}
           {achieved && (
-            <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", stiffness: 200, damping: 15 }}
-            >
-              <div className="h-8 w-8 rounded-full bg-[#10B981]/15 flex items-center justify-center">
-                <Trophy className="h-4 w-4 text-[#10B981]" />
-              </div>
-            </motion.div>
+            <div className="h-8 w-8 rounded-full bg-[#10B981]/15 flex items-center justify-center">
+              <Trophy className="h-4 w-4 text-[#10B981]" />
+            </div>
           )}
         </div>
 
-        {/* Valor principal animado */}
+        {/* Valor principal */}
         <div className="mt-4 mb-2">
           <span className="text-3xl font-bold text-foreground tracking-tight">
-            <AnimatedNumber
+            <FormattedNumber
               value={value}
               prefix={prefix}
               suffix={suffix}
@@ -182,12 +158,10 @@ export function KpiCard({
               <span>{Math.min(100, Math.round((value / goal) * 100))}%</span>
             </div>
             <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${Math.min(100, (value / goal) * 100)}%` }}
-                transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
+              <div
                 className="h-full rounded-full"
                 style={{
+                  width: `${Math.min(100, (value / goal) * 100)}%`,
                   backgroundColor: achieved ? "#10B981" : color,
                 }}
               />

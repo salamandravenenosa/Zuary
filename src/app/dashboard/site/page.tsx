@@ -3,6 +3,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import {
   ArrowDownRight,
@@ -21,18 +22,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatNumber } from "@/lib/utils";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 
 type IntegrationStatus = {
   type: string;
@@ -70,6 +59,16 @@ type DashboardResponse = {
 
 const sourceColors = ["#7C3AED", "#A855F7", "#22D3EE", "#C084FC", "#F59E0B", "#8B5CF6"];
 
+const TrafficDonutChart = dynamic(
+  () => import("@/components/dashboard/charts/site-traffic-charts").then((mod) => mod.TrafficDonutChart),
+  { ssr: false, loading: () => <ChartFallback /> }
+);
+
+const TrafficBarChart = dynamic(
+  () => import("@/components/dashboard/charts/site-traffic-charts").then((mod) => mod.TrafficBarChart),
+  { ssr: false, loading: () => <ChartFallback /> }
+);
+
 function isGAConnected(integrations: IntegrationStatus[] | undefined) {
   return integrations?.some((integration) => integration.type === "GOOGLE_ANALYTICS" && integration.status === "CONNECTED") ?? false;
 }
@@ -103,6 +102,14 @@ function LoadingGrid() {
       {Array.from({ length: 4 }).map((_, index) => (
         <KpiCardSkeleton key={index} />
       ))}
+    </div>
+  );
+}
+
+function ChartFallback() {
+  return (
+    <div className="flex h-full min-h-[220px] items-center justify-center rounded-xl border border-border/60 bg-muted/20">
+      <div className="h-20 w-20 rounded-full border border-primary/20 border-t-primary/60 animate-spin" />
     </div>
   );
 }
@@ -302,24 +309,7 @@ export default function SiteDashboard() {
               {trafficSources.length > 0 ? (
                 <>
                   <div className="h-[220px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie data={trafficSources} cx="50%" cy="50%" innerRadius={58} outerRadius={88} paddingAngle={3} dataKey="sessions" stroke="none">
-                          {trafficSources.map((entry) => (
-                            <Cell key={entry.name} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "var(--panel-strong)",
-                            border: "1px solid var(--border)",
-                            borderRadius: "10px",
-                            color: "var(--foreground)",
-                          }}
-                          formatter={(value: unknown) => [formatNumber(Number(value ?? 0)), "Sessões"]}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
+                    <TrafficDonutChart data={trafficSources} />
                   </div>
                   <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {trafficSources.map((source) => (
@@ -372,26 +362,7 @@ export default function SiteDashboard() {
               </div>
             ) : (
               <div className="h-[240px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={trafficSources}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--panel-line)" />
-                    <XAxis dataKey="name" stroke="var(--muted-foreground)" tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} tickLine={false} axisLine={false} />
-                    <YAxis stroke="var(--muted-foreground)" tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} tickLine={false} axisLine={false} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "var(--panel-strong)",
-                        border: "1px solid var(--border)",
-                        borderRadius: "10px",
-                        color: "var(--foreground)",
-                      }}
-                    />
-                    <Bar dataKey="sessions" name="Sessões" radius={[8, 8, 0, 0]}>
-                      {trafficSources.map((source) => (
-                        <Cell key={source.name} fill={source.color} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
+                <TrafficBarChart data={trafficSources} />
               </div>
             )}
           </CardContent>

@@ -5,12 +5,10 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MousePointerClick, ArrowUpRight, Users, Star, Plug } from "lucide-react";
 import { KpiCard } from "@/components/dashboard/kpi-card";
-import { KpiCardSkeleton, ChartSkeleton, PostFeedSkeleton } from "@/components/dashboard/skeletons";
+import { KpiCardSkeleton } from "@/components/dashboard/skeletons";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import { EmptyState } from "@/components/dashboard/empty-state";
-import Link from "next/link";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -112,22 +110,16 @@ export default function DashboardPage() {
                     </div>
                   </CardHeader>
                   <CardContent className="p-6">
-                    <div className="h-[280px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={[]}>
-                          <defs>
-                            <linearGradient id="gradSessoes" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#7C3AED" stopOpacity={0.25} />
-                              <stop offset="95%" stopColor="#7C3AED" stopOpacity={0} />
-                            </linearGradient>
-                          </defs>
-                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.1)" />
-                          <XAxis dataKey="date" stroke="rgba(128,128,128,0.2)" tick={{ fill: "#71717A", fontSize: 11 }} tickLine={false} axisLine={false} />
-                          <YAxis stroke="rgba(128,128,128,0.2)" tick={{ fill: "#71717A", fontSize: 11 }} tickLine={false} axisLine={false} />
-                          <Tooltip contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", color: "var(--foreground)", fontSize: "13px" }} />
-                          <Area type="monotone" dataKey="value" stroke="#7C3AED" strokeWidth={2} fill="url(#gradSessoes)" />
-                        </AreaChart>
-                      </ResponsiveContainer>
+                    <div className="relative flex h-[280px] items-center justify-center overflow-hidden rounded-xl border border-border/70 bg-muted/20">
+                      <div className="absolute inset-x-6 bottom-10 top-10 grid grid-rows-4">
+                        {Array.from({ length: 4 }).map((_, index) => (
+                          <span key={index} className="border-t border-border/60" />
+                        ))}
+                      </div>
+                      <div className="absolute bottom-10 left-6 right-6 h-24 rounded-t-[2rem] border-t-2 border-[#7C3AED]/50 bg-gradient-to-t from-[#7C3AED]/10 to-transparent" />
+                      <p className="relative max-w-xs text-center text-sm leading-6 text-muted-foreground">
+                        A evolução aparece aqui quando houver série histórica suficiente.
+                      </p>
                     </div>
                   </CardContent>
                 </Card>

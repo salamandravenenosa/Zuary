@@ -2,33 +2,27 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import {
   MapPin,
   Phone,
-  Globe,
   Navigation,
   Star,
   Eye,
   Search,
   MessageSquare,
-  TrendingUp,
   ThumbsUp,
-  Calendar,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { KpiCard } from "@/components/dashboard/kpi-card";
 import { KpiCardSkeleton } from "@/components/dashboard/skeletons";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-} from "recharts";
+
+const GoogleViewsChart = dynamic(
+  () => import("@/components/dashboard/charts/google-views-chart").then((mod) => mod.GoogleViewsChart),
+  { ssr: false, loading: () => <ChartFallback /> }
+);
 
 // Dados mockados do Google Meu Negócio
 const gmbData = {
@@ -104,6 +98,14 @@ function StarRating({ rating }: { rating: number }) {
           }`}
         />
       ))}
+    </div>
+  );
+}
+
+function ChartFallback() {
+  return (
+    <div className="flex h-full min-h-[250px] items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.02]">
+      <div className="h-16 w-16 rounded-full border border-[#7C3AED]/20 border-t-[#7C3AED]/70 animate-spin" />
     </div>
   );
 }
@@ -259,22 +261,7 @@ export default function GoogleDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="h-[250px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={gmbData.evolucao}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-                      <XAxis dataKey="mes" stroke="rgba(255,255,255,0.2)" tick={{ fill: "#71717A", fontSize: 12 }} />
-                      <YAxis stroke="rgba(255,255,255,0.2)" tick={{ fill: "#71717A", fontSize: 12 }} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "#1E1E2A",
-                          border: "1px solid rgba(255,255,255,0.08)",
-                          borderRadius: "8px",
-                          color: "#E4E4E7",
-                        }}
-                      />
-                      <Bar dataKey="vistas" fill="#7C3AED" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <GoogleViewsChart data={gmbData.evolucao} />
                 </div>
               </CardContent>
             </Card>

@@ -4,6 +4,18 @@ const nextConfig = {
   async headers() {
     return [
       {
+        source: "/_next/static/(.*)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
+        source: "/:path(favicon.ico|favicon-16x16.png|favicon-32x32.png|apple-touch-icon.png|icon-1024.png|robots.txt|sitemap.xml|llms.txt)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" },
+        ],
+      },
+      {
         source: "/(.*)",
         headers: [
           { key: "X-Frame-Options", value: "DENY" },
