@@ -1,4 +1,14 @@
-// Política de Cookies — LGPD + Transparência
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Política de Cookies",
+  description:
+    "Política de Cookies do Zuary, incluindo cookies essenciais, sessão, tema e funcionamento da plataforma.",
+  alternates: {
+    canonical: "/legal/cookies",
+  },
+};
+
 export default function CookiesPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-16">

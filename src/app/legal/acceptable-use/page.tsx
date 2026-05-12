@@ -1,4 +1,14 @@
-// Política de Uso Aceitável — Compliance com plataformas
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Política de Uso Aceitável",
+  description:
+    "Política de Uso Aceitável do Zuary para integrações, métricas, APIs e uso de dados de plataformas.",
+  alternates: {
+    canonical: "/legal/acceptable-use",
+  },
+};
+
 export default function AcceptableUsePage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-16">
@@ -31,7 +41,7 @@ export default function AcceptableUsePage() {
               <li><strong>Automatização de publicação:</strong> Publicar conteúdo automaticamente em redes sociais</li>
               <li><strong>Manipulação de engajamento:</strong> Curtir, comentar ou seguir automaticamente</li>
               <li><strong>Coleta de dados de terceiros:</strong> Acessar métricas de contas sem autorização</li>
-              <li><strong>Venda de dados:</strong> Revender qualquer dados obtidos through o serviço</li>
+              <li><strong>Venda de dados:</strong> Revender dados obtidos pelo serviço</li>
               <li><strong>Spam:</strong> Enviar mensagens não solicitadas usando dados do serviço</li>
               <li><strong>Engenharia reversa:</strong> Tentar acessar tokens ou dados de outros usuários</li>
               <li><strong>Burlar rate limits:</strong> Tentar contornar limites de requisição das APIs</li>

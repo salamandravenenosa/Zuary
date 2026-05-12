@@ -1,4 +1,14 @@
-// Página de Exclusão de Dados — LGPD + Meta Data Deletion Requirements
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Exclusão de Dados",
+  description:
+    "Instruções para solicitar exclusão de dados pessoais, métricas e tokens OAuth armazenados no Zuary.",
+  alternates: {
+    canonical: "/legal/data-deletion",
+  },
+};
+
 export default function DataDeletionPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-16">
@@ -30,7 +40,7 @@ export default function DataDeletionPage() {
           <h2 className="text-xl font-semibold text-white mb-3">Como Solicitar</h2>
           <div className="p-4 rounded-lg bg-white/[0.03] border border-white/[0.06] space-y-3">
             <p className="text-foreground font-medium">Envie um email para:</p>
-            <p className="text-[#7C3AED]">privacidade@negóciometrics.com.br</p>
+            <p className="text-[#7C3AED]">privacidade@zuary.vercel.app</p>
             <p className="text-muted-foreground">Com o assunto: &quot;Solicitação de Exclusão de Dados&quot;</p>
             <p className="text-muted-foreground">Inclua: Seu email cadastrado e nome da empresa</p>
           </div>
@@ -46,7 +56,7 @@ export default function DataDeletionPage() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">Revogação de Acesso OAuth</h2>
           <p className="text-muted-foreground leading-relaxed">
-            Ao solicitar a exclusão, todos os tokens de acesso OAuth são imediatamente revogados nas plataformas correspondentes (Meta, Google, TikTok). Issoremove qualquer acesso que o Zuary tenha às suas contas externas.
+            Ao solicitar a exclusão, todos os tokens de acesso OAuth são imediatamente revogados nas plataformas correspondentes (Meta, Google, TikTok). Isso remove qualquer acesso que o Zuary tenha às suas contas externas.
           </p>
           <p className="text-muted-foreground leading-relaxed mt-2">
             Você também pode revogar o acesso individualmente antes da exclusão completa, acessando <strong>Configurações → Integrações</strong> no painel.

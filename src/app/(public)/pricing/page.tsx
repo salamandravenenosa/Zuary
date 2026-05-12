@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Preços do dashboard de marketing",
@@ -31,9 +32,9 @@ export default function PricingPage() {
             <li>✓ 30 dias de dados</li>
             <li>✓ Relatórios mensais</li>
           </ul>
-          <button className="w-full py-2.5 rounded-lg border border-white/[0.08] text-foreground text-sm font-medium hover:bg-white/[0.06] transition-colors">
+          <Link href="/login" className="block w-full py-2.5 rounded-lg border border-white/[0.08] text-center text-foreground text-sm font-medium hover:bg-white/[0.06] transition-colors">
             Começar grátis
-          </button>
+          </Link>
         </div>
 
         {/* Plano Pro */}
@@ -52,9 +53,9 @@ export default function PricingPage() {
             <li>✓ Metas mensais</li>
             <li>✓ Suporte por email</li>
           </ul>
-          <button className="w-full py-2.5 rounded-lg bg-[#7C3AED] text-white text-sm font-medium hover:bg-[#6D28D9] transition-colors">
+          <Link href="/login" className="block w-full py-2.5 rounded-lg bg-[#7C3AED] text-center text-white text-sm font-medium hover:bg-[#6D28D9] transition-colors">
             Assinar Pro
-          </button>
+          </Link>
         </div>
 
         {/* Plano Enterprise */}
@@ -70,9 +71,9 @@ export default function PricingPage() {
             <li>✓ Suporte prioritário</li>
             <li>✓ SLA 99.9%</li>
           </ul>
-          <button className="w-full py-2.5 rounded-lg border border-white/[0.08] text-foreground text-sm font-medium hover:bg-white/[0.06] transition-colors">
+          <Link href="/contact" className="block w-full py-2.5 rounded-lg border border-white/[0.08] text-center text-foreground text-sm font-medium hover:bg-white/[0.06] transition-colors">
             Falar com vendas
-          </button>
+          </Link>
         </div>
       </div>
     </div>
