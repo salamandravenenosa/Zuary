@@ -56,7 +56,7 @@ export default function AboutPage() {
           O Zuary ajuda a agência a provar o trabalho do mês. O cliente vê sessões, seguidores, avaliações, leads e relatórios sem entrar nas ferramentas de origem.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          A interface foi feita para negócios locais, principalmente clínicas e empresas que querem saber se o marketing está trazendo movimento.
+          A interface foi feita para negócios locais — quem quer saber se o marketing está trazendo resultado.
         </p>
       </div>
     </div>

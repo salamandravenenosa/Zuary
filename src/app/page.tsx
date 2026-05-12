@@ -4,30 +4,30 @@ import Link from "next/link";
 import { ArrowRight, BarChart3, FileText, Lock, MapPin, Share2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Zuary — Marketing Analytics para sua Empresa",
+  title: "Zuary — Marketing Analytics",
   description:
-    "Acesse sua dashboard de métricas de marketing. Redes sociais, site e Google Maps em um só lugar.",
+    "Suas métricas de marketing em um só lugar. Redes sociais, site e Google Maps.",
 };
 
 const features = [
   {
     title: "Redes sociais",
-    text: "Instagram e TikTok com alcance, seguidores e conteúdo recente.",
+    text: "Instagram e TikTok: seguidores, alcance, engajamento. Tudo junto.",
     icon: Share2,
   },
   {
-    title: "Site e tráfego",
-    text: "Sessões, usuários, canais e eventos do Google Analytics.",
+    title: "Site",
+    text: "Quem visitou, de onde veio, o que fez. Dados do Google Analytics direto aqui.",
     icon: BarChart3,
   },
   {
     title: "Google Maps",
-    text: "Avaliações, buscas, rotas e chamadas do seu perfil.",
+    text: "Notas, avaliações, ligações e rotas. O que as pessoas fazem quando te encontram no Google.",
     icon: MapPin,
   },
   {
     title: "Relatórios",
-    text: "Resumo mensal para ver resultado sem montar planilha.",
+    text: "Resumo mensal pronto. Não precisa montar planilha nenhuma.",
     icon: FileText,
   },
 ];
@@ -35,7 +35,6 @@ const features = [
 export default function Home() {
   return (
     <main className="min-h-screen overflow-hidden bg-background text-foreground">
-      {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/75 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-3">
@@ -61,7 +60,6 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero */}
       <section className="relative mx-auto grid max-w-6xl gap-10 px-6 py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-28">
         <div className="space-y-7">
           <p className="w-fit rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.22em] text-primary">
@@ -69,10 +67,10 @@ export default function Home() {
           </p>
           <div className="space-y-5">
             <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Acesse suas métricas de marketing em um só lugar.
+              Suas métricas de marketing num só lugar.
             </h1>
             <p className="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-              Dados de redes sociais, site e Google Maps organizados para você acompanhar o resultado do seu marketing sem complicação.
+              Redes sociais, site, Google Maps. Tudo junto pra você ver o que está dando certo e o que precisa mudar.
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -80,16 +78,15 @@ export default function Home() {
               href="/login"
               className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              Acessar dashboard <ArrowRight className="h-4 w-4" />
+              Entrar na dashboard <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Lock className="h-4 w-4 text-primary" />
-            Dados protegidos e criptografados. Acesso exclusivo para clientes.
+            Seus dados ficam protegidos. Acesso só pra quem é cliente.
           </div>
         </div>
 
-        {/* Preview da dashboard */}
         <div className="relative rounded-2xl border border-border bg-card/65 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl">
           <div className="absolute inset-x-8 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(124,58,237,0.9),transparent)]" />
           <div className="rounded-xl border border-border bg-background/70 p-4">
@@ -132,7 +129,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features */}
       <section className="mx-auto max-w-6xl px-6 pb-20">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {features.map((feature) => (
@@ -145,7 +141,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="border-t border-border py-8">
         <div className="mx-auto max-w-6xl px-6 text-center text-xs text-muted-foreground">
           Zuary © 2026 · Marketing Analytics
