@@ -1,19 +1,16 @@
-# https://zuary.vercel.app/robots.txt
-# Permite todos os crawlers incluindo Facebook, Google, TikTok
-
 User-agent: *
 Allow: /
 
-# Facebook crawler
 User-agent: facebookexternalhit
 Allow: /
 
-# Google crawler
 User-agent: Googlebot
 Allow: /
 
-# TikTok crawler
 User-agent: TikTokBot
+Allow: /
+
+User-agent: Twitterbot
 Allow: /
 
 Sitemap: https://zuary.vercel.app/sitemap.xml
