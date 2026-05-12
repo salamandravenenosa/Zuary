@@ -1,397 +1,413 @@
-// Página /dashboard/social — Instagram e TikTok lado a lado
+// Página /dashboard/social — Instagram e TikTok com dados reais
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import {
+  ArrowRight,
+  BarChart3,
   Camera,
-  Music2,
+  Eye,
   Heart,
   MessageCircle,
+  Music2,
+  Plug,
   Share2,
-  Eye,
-  TrendingUp,
+  Sparkles,
   Users,
-  BarChart3,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { ChannelSection, DashboardPageShell } from "@/components/dashboard/page-shell";
+import { EmptyState } from "@/components/dashboard/empty-state";
 import { KpiCard } from "@/components/dashboard/kpi-card";
 import { KpiCardSkeleton } from "@/components/dashboard/skeletons";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from "recharts";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatDate, formatNumber } from "@/lib/utils";
 
-// Dados mockados do Instagram
-const instagramData = {
-  seguidores: 8450,
-  seguidoresAnterior: 7900,
-  alcance: 45200,
-  alcanceAnterior: 38100,
-  impressoes: 62800,
-  engajamento: 4.2,
-  engajamentoAnterior: 3.8,
-  storiesViews: 12400,
-  posts: [
-    { id: 1, title: "Clareamento Dental", tipo: "Reels", curtidas: 1850, comentarios: 142, alcance: 12400, data: "2026-04-28" },
-    { id: 2, title: "Dica de Escovação", tipo: "Carrossel", curtidas: 920, comentarios: 67, alcance: 6800, data: "2026-04-25" },
-    { id: 3, title: "Depoimento Paciente", tipo: "Reels", curtidas: 1340, comentarios: 98, alcance: 9200, data: "2026-04-22" },
-  ],
-  crescimentoSemanal: [
-    { semana: "Sem 1", seguidores: 200 },
-    { semana: "Sem 2", seguidores: 150 },
-    { semana: "Sem 3", seguidores: 120 },
-    { semana: "Sem 4", seguidores: 80 },
-  ],
+type IntegrationStatus = {
+  type: string;
+  status: string;
+  lastSyncAt?: string | null;
+  platformName?: string | null;
 };
 
-// Dados mockados do TikTok
-const tiktokData = {
-  seguidores: 4000,
-  seguidoresAnterior: 3900,
-  visualizacoes: 89200,
-  visualizacoesAnterior: 72000,
-  curtidas: 15600,
-  comentarios: 2340,
-  shares: 1890,
-  engajamento: 21.9,
-  engajamentoAnterior: 18.5,
-  audienciaPorIdade: [
-    { faixa: "18-24", percentual: 35 },
-    { faixa: "25-34", percentual: 42 },
-    { faixa: "35-44", percentual: 15 },
-    { faixa: "45+", percentual: 8 },
-  ],
-  videos: [
-    { id: 1, title: "Como funciona clareamento", visualizacoes: 34200, curtidas: 8900, comentarios: 1200, shares: 890 },
-    { id: 2, title: "Mitos sobre dentista", visualizacoes: 28100, curtidas: 4500, comentarios: 780, shares: 620 },
-    { id: 3, title: "Rotina de higiene bucal", visualizacoes: 26900, curtidas: 2200, comentarios: 360, shares: 380 },
-  ],
+type InstagramPost = {
+  id?: string;
+  caption?: string;
+  type?: string;
+  media_type?: string;
+  likes?: number;
+  like_count?: number;
+  comments?: number;
+  comments_count?: number;
+  reach?: number;
+  timestamp?: string;
 };
+
+type TikTokVideo = {
+  id?: string;
+  title?: string;
+  views?: number;
+  likes?: number;
+  comments?: number;
+  shares?: number;
+};
+
+type SocialMetrics = {
+  followerCount?: number;
+  mediaCount?: number;
+  impressions?: number;
+  reach?: number;
+  engagement?: number;
+  storiesViews?: number;
+  recentPosts?: InstagramPost[];
+  followingCount?: number;
+  likesCount?: number;
+  videoCount?: number;
+  totalViews?: number;
+  totalLikes?: number;
+  totalComments?: number;
+  totalShares?: number;
+  recentVideos?: TikTokVideo[];
+};
+
+type DashboardResponse = {
+  integrations?: IntegrationStatus[];
+  metrics?: {
+    INSTAGRAM?: SocialMetrics | null;
+    TIKTOK?: SocialMetrics | null;
+  };
+  hasData?: boolean;
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0 },
+};
+
+function isConnected(integrations: IntegrationStatus[] | undefined, type: string) {
+  return integrations?.some((integration) => integration.type === type && integration.status === "CONNECTED") ?? false;
+}
+
+function getLastSync(integrations: IntegrationStatus[] | undefined, type: string) {
+  const value = integrations?.find((integration) => integration.type === type)?.lastSyncAt;
+  return value ? formatDate(value) : "Sem sincronização";
+}
+
+function engagementRate(likes = 0, comments = 0, shares = 0, reach = 0) {
+  if (!reach) return 0;
+  return ((likes + comments + shares) / reach) * 100;
+}
+
+function postTitle(post: InstagramPost, index: number) {
+  const caption = post.caption?.trim();
+  if (caption) return caption.length > 64 ? `${caption.slice(0, 64)}...` : caption;
+  return `Publicação ${index + 1}`;
+}
+
+function LoadingGrid() {
+  return (
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+      {Array.from({ length: 4 }).map((_, index) => (
+        <KpiCardSkeleton key={index} />
+      ))}
+    </div>
+  );
+}
+
+function ChannelEmptyState({
+  title,
+  description,
+  accent,
+}: {
+  title: string;
+  description: string;
+  accent: string;
+}) {
+  return (
+    <Card className="border-dashed">
+      <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-4">
+          <div
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border bg-background/60"
+            style={{ color: accent }}
+          >
+            <Plug className="h-5 w-5" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground">{title}</h3>
+            <p className="mt-1 max-w-xl text-sm leading-6 text-muted-foreground">{description}</p>
+          </div>
+        </div>
+        <Button asChild className="gap-2">
+          <Link href="/dashboard/integrations">
+            Conectar <ArrowRight className="h-4 w-4" />
+          </Link>
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function SocialDashboard() {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<DashboardResponse | null>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1200);
-    return () => clearTimeout(timer);
+    let active = true;
+
+    fetch("/api/dashboard", { credentials: "include" })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Nao foi possivel carregar os dados sociais.");
+        return response.json();
+      })
+      .then((payload: DashboardResponse) => {
+        if (!active) return;
+        setData(payload);
+      })
+      .catch((err: Error) => {
+        if (!active) return;
+        setError(err.message);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
-  // Calcula taxa de engajamento consolidada
-  const calcEngajamento = (curtidas: number, comentarios: number, shares: number, alcance: number) => {
-    if (alcance === 0) return 0;
-    return ((curtidas + comentarios + shares) / alcance) * 100;
-  };
+  const instagram = data?.metrics?.INSTAGRAM ?? null;
+  const tiktok = data?.metrics?.TIKTOK ?? null;
+  const instagramConnected = isConnected(data?.integrations, "INSTAGRAM");
+  const tiktokConnected = isConnected(data?.integrations, "TIKTOK");
+  const hasInstagramData = Boolean(instagram);
+  const hasTikTokData = Boolean(tiktok);
+  const hasAnySocial = hasInstagramData || hasTikTokData;
+
+  const totals = useMemo(() => {
+    const instagramLikes = instagram?.recentPosts?.reduce((sum, post) => sum + (post.likes ?? post.like_count ?? 0), 0) ?? 0;
+    const instagramComments = instagram?.recentPosts?.reduce((sum, post) => sum + (post.comments ?? post.comments_count ?? 0), 0) ?? 0;
+    const tiktokLikes = tiktok?.totalLikes ?? tiktok?.likesCount ?? 0;
+    const tiktokComments = tiktok?.totalComments ?? 0;
+    const tiktokShares = tiktok?.totalShares ?? 0;
+    const totalReach = (instagram?.reach ?? 0) + (tiktok?.totalViews ?? 0);
+
+    return {
+      followers: (instagram?.followerCount ?? 0) + (tiktok?.followerCount ?? 0),
+      reach: totalReach,
+      interactions: instagramLikes + instagramComments + tiktokLikes + tiktokComments + tiktokShares,
+      engagement: engagementRate(instagramLikes + tiktokLikes, instagramComments + tiktokComments, tiktokShares, totalReach),
+    };
+  }, [instagram, tiktok]);
+
+  if (error) {
+    return (
+      <DashboardPageShell
+        eyebrow="Social cockpit"
+        title="Redes Sociais"
+        description="Instagram e TikTok conectados ao banco de dados do Zuary."
+        icon={<Sparkles className="h-5 w-5" />}
+        status={{ label: "Erro ao carregar", tone: "danger" }}
+      >
+        <EmptyState
+          title="Nao foi possivel carregar os dados"
+          description={error}
+          actionLabel="Ver integrações"
+          actionHref="/dashboard/integrations"
+        />
+      </DashboardPageShell>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      {/* Título */}
-      <div>
-        <h1 className="text-2xl font-bold text-white">Redes Sociais</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Instagram e TikTok lado a lado — acompanhe seu alcance e engajamento
-        </p>
-      </div>
-
-      {/* ============ INSTAGRAM ============ */}
-      <div>
-        <div className="flex items-center gap-2 mb-4">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-            <Camera className="h-4 w-4 text-white" />
-          </div>
-          <h2 className="text-lg font-semibold text-white">Instagram</h2>
-          <Badge variant="success" className="ml-2">Conectado</Badge>
-        </div>
-
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <KpiCardSkeleton key={i} />
-            ))}
-          </div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 md:grid-cols-4 gap-4"
-          >
+    <DashboardPageShell
+      eyebrow="Social cockpit"
+      title="Redes Sociais"
+      description="Acompanhe alcance, engajamento e conteudos recentes sem depender de dados mockados."
+      icon={<Sparkles className="h-5 w-5" />}
+      status={{
+        label: loading ? "Sincronizando" : hasAnySocial ? "Dados reais" : "Sem dados sociais",
+        tone: loading ? "default" : hasAnySocial ? "success" : "warning",
+      }}
+    >
+      {loading ? (
+        <LoadingGrid />
+      ) : hasAnySocial ? (
+        <motion.div
+          variants={{ show: { transition: { staggerChildren: 0.07 } } }}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4"
+        >
+          <motion.div variants={itemVariants}>
             <KpiCard
               title="Seguidores"
-              value={instagramData.seguidores}
-              previousValue={instagramData.seguidoresAnterior}
+              value={totals.followers}
               icon={<Users className="h-5 w-5" />}
-              tooltip="Pessoas que te seguem no Instagram. Seguidores fiéis são mais propensos a agendar consultas."
-              color="#E1306C"
-            />
-            <KpiCard
-              title="Alcance"
-              value={instagramData.alcance}
-              previousValue={instagramData.alcanceAnterior}
-              icon={<Eye className="h-5 w-5" />}
-              tooltip="Número de pessoas únicas que viram seus posts. Indica quantas pessoas sua marca está alcançando."
-              color="#833AB4"
-            />
-            <KpiCard
-              title="Engajamento"
-              value={instagramData.engajamento}
-              previousValue={instagramData.engajamentoAnterior}
-              suffix="%"
-              icon={<Heart className="h-5 w-5" />}
-              tooltip="Taxa de engajamento: de cada 100 pessoas que viram seu post, quantas interagiram (curtiram, comentaram, compartilham)."
-              color="#F77737"
-              formatAsDecimal
-            />
-            <KpiCard
-              title="Views Stories"
-              value={instagramData.storiesViews}
-              icon={<BarChart3 className="h-5 w-5" />}
-              tooltip="Total de visualizações nos seus Stories. Stories são ótimos para manter contato diário com seus seguidores."
-              color="#405DE6"
+              tooltip="Total de seguidores somando Instagram e TikTok conectados."
+              color="#7C3AED"
             />
           </motion.div>
-        )}
+          <motion.div variants={itemVariants}>
+            <KpiCard
+              title="Alcance Social"
+              value={totals.reach}
+              icon={<Eye className="h-5 w-5" />}
+              tooltip="Alcance do Instagram somado as visualizações recentes do TikTok."
+              color="#22D3EE"
+            />
+          </motion.div>
+          <motion.div variants={itemVariants}>
+            <KpiCard
+              title="Interações"
+              value={totals.interactions}
+              icon={<Heart className="h-5 w-5" />}
+              tooltip="Curtidas, comentários e compartilhamentos capturados nos conteúdos recentes."
+              color="#EC4899"
+            />
+          </motion.div>
+          <motion.div variants={itemVariants}>
+            <KpiCard
+              title="Engajamento"
+              value={totals.engagement}
+              suffix="%"
+              icon={<BarChart3 className="h-5 w-5" />}
+              tooltip="Taxa consolidada de engajamento calculada a partir das interações e alcance social."
+              color="#A855F7"
+              formatAsDecimal
+            />
+          </motion.div>
+        </motion.div>
+      ) : (
+        <EmptyState
+          title="Nenhuma rede social com dados"
+          description="Conecte Instagram ou TikTok e aguarde a primeira sincronização para transformar esta tela em um cockpit social real."
+          actionLabel="Conectar redes sociais"
+          actionHref="/dashboard/integrations"
+        />
+      )}
 
-        {/* Melhores posts Instagram */}
-        {!loading && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Card className="mt-4 border-white/[0.08] bg-[#111118]/80 backdrop-blur-xl">
-              <CardHeader>
-                <CardTitle className="text-base">Top Posts — Instagram</CardTitle>
+      <ChannelSection
+        title="Instagram"
+        description={`Ultima sincronizacao: ${getLastSync(data?.integrations, "INSTAGRAM")}`}
+        icon={<Camera className="h-5 w-5" />}
+        accent="#C084FC"
+        connected={instagramConnected}
+      >
+        {loading ? (
+          <LoadingGrid />
+        ) : instagram ? (
+          <>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <KpiCard title="Seguidores" value={instagram.followerCount ?? 0} icon={<Users className="h-5 w-5" />} tooltip="Total de seguidores capturado pela API do Instagram." color="#C084FC" />
+              <KpiCard title="Alcance" value={instagram.reach ?? 0} icon={<Eye className="h-5 w-5" />} tooltip="Pessoas unicas impactadas pelos posts recentes." color="#7C3AED" />
+              <KpiCard title="Impressões" value={instagram.impressions ?? 0} icon={<BarChart3 className="h-5 w-5" />} tooltip="Total de impressões coletadas dos posts recentes." color="#A855F7" />
+              <KpiCard title="Stories" value={instagram.storiesViews ?? 0} icon={<MessageCircle className="h-5 w-5" />} tooltip="Visualizações de stories na ultima coleta disponivel." color="#22D3EE" />
+            </div>
+
+            <Card>
+              <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-base">Top posts recentes</CardTitle>
+                <Badge variant="secondary">{formatNumber(instagram.recentPosts?.length ?? 0)} posts</Badge>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-white/[0.08]">
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Post</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tipo</th>
-                        <th className="text-right py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Curtidas</th>
-                        <th className="text-right py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Coment.</th>
-                        <th className="text-right py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Alcance</th>
-                        <th className="text-right py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Engajamento</th>
+                      <tr className="border-b border-border">
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Post</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tipo</th>
+                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Curtidas</th>
+                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Comentários</th>
+                        <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Alcance</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {instagramData.posts.map((post) => {
-                        const eng = calcEngajamento(post.curtidas, post.comentarios, 0, post.alcance);
-                        return (
-                          <tr key={post.id} className="border-b border-white/[0.04] hover:bg-white/[0.02]">
-                            <td className="py-3 px-4 font-medium text-foreground">{post.title}</td>
-                            <td className="py-3 px-4"><Badge variant="secondary">{post.tipo}</Badge></td>
-                            <td className="py-3 px-4 text-right text-muted-foreground">{post.curtidas.toLocaleString("pt-BR")}</td>
-                            <td className="py-3 px-4 text-right text-muted-foreground">{post.comentarios}</td>
-                            <td className="py-3 px-4 text-right text-muted-foreground">{post.alcance.toLocaleString("pt-BR")}</td>
-                            <td className="py-3 px-4 text-right">
-                              <span className={eng >= 3 ? "text-[#10B981] font-medium" : "text-[#F59E0B] font-medium"}>
-                                {eng.toFixed(1)}%
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      })}
+                      {(instagram.recentPosts ?? []).map((post, index) => (
+                        <tr key={post.id ?? index} className="border-b border-border/60 transition-colors hover:bg-muted/35">
+                          <td className="max-w-[360px] px-4 py-3 font-medium text-foreground">{postTitle(post, index)}</td>
+                          <td className="px-4 py-3"><Badge variant="secondary">{post.type ?? post.media_type ?? "Post"}</Badge></td>
+                          <td className="px-4 py-3 text-right text-muted-foreground">{formatNumber(post.likes ?? post.like_count ?? 0)}</td>
+                          <td className="px-4 py-3 text-right text-muted-foreground">{formatNumber(post.comments ?? post.comments_count ?? 0)}</td>
+                          <td className="px-4 py-3 text-right text-muted-foreground">{formatNumber(post.reach ?? 0)}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
+                {(instagram.recentPosts?.length ?? 0) === 0 ? (
+                  <p className="py-8 text-center text-sm text-muted-foreground">Posts recentes aparecerão após a próxima sincronização.</p>
+                ) : null}
               </CardContent>
             </Card>
-          </motion.div>
-        )}
-      </div>
-
-      {/* ============ TIKTOK ============ */}
-      <div>
-        <div className="flex items-center gap-2 mb-4">
-          <div className="h-8 w-8 rounded-lg bg-black flex items-center justify-center border border-white/[0.08]">
-            <Music2 className="h-4 w-4 text-white" />
-          </div>
-          <h2 className="text-lg font-semibold text-white">TikTok</h2>
-          <Badge variant="success" className="ml-2">Conectado</Badge>
-        </div>
-
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <KpiCardSkeleton key={i} />
-            ))}
-          </div>
+          </>
         ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-4 gap-4"
-          >
-            <KpiCard
-              title="Seguidores"
-              value={tiktokData.seguidores}
-              previousValue={tiktokData.seguidoresAnterior}
-              icon={<Users className="h-5 w-5" />}
-              tooltip="Pessoas que te seguem no TikTok. O TikTok tem ótimo alcance orgânico para empresas."
-              color="#000000"
-            />
-            <KpiCard
-              title="Visualizações"
-              value={tiktokData.visualizacoes}
-              previousValue={tiktokData.visualizacoesAnterior}
-              icon={<Eye className="h-5 w-5" />}
-              tooltip="Total de vezes que seus vídeos foram assistidos. Visualizações no TikTok podem gerar alcance massivo."
-              color="#25F4EE"
-            />
-            <KpiCard
-              title="Engajamento"
-              value={tiktokData.engajamento}
-              previousValue={tiktokData.engajamentoAnterior}
-              suffix="%"
-              icon={<Heart className="h-5 w-5" />}
-              tooltip="Taxa de engajamento: (curtidas + comentários + shares) / visualizações × 100. TikTok costuma ter engajamento alto."
-              color="#FE2C55"
-              formatAsDecimal
-            />
-            <KpiCard
-              title="Shares"
-              value={tiktokData.shares}
-              icon={<Share2 className="h-5 w-5" />}
-              tooltip="Quantas vezes seus vídeos foram compartilhados. Compartilhamentos aumentam seu alcance organicamente."
-              color="#25F4EE"
-            />
-          </motion.div>
+          <ChannelEmptyState
+            title={instagramConnected ? "Instagram conectado, aguardando dados" : "Instagram ainda nao conectado"}
+            description={instagramConnected ? "A integração existe, mas ainda nao ha snapshot de metricas. Rode a coleta ou aguarde o cron." : "Conecte o Instagram para acompanhar alcance, impressões, stories e posts recentes."}
+            accent="#C084FC"
+          />
         )}
+      </ChannelSection>
 
-        {/* Audiência por faixa etária */}
-        {!loading && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <Card className="border-white/[0.08] bg-[#111118]/80 backdrop-blur-xl">
-                <CardHeader>
-                  <CardTitle className="text-base">Audiência por Faixa Etária — TikTok</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[200px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={tiktokData.audienciaPorIdade}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-                        <XAxis dataKey="faixa" stroke="rgba(255,255,255,0.2)" tick={{ fill: "#71717A", fontSize: 12 }} />
-                        <YAxis stroke="rgba(255,255,255,0.2)" tick={{ fill: "#71717A", fontSize: 12 }} />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "#1E1E2A",
-                            border: "1px solid rgba(255,255,255,0.08)",
-                            borderRadius: "8px",
-                            color: "#E4E4E7",
-                          }}
-                          formatter={(value: any) => [`${value}%`, "Audiência"]}
-                        />
-                        <Bar dataKey="percentual" fill="#FE2C55" radius={[4, 4, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
+      <ChannelSection
+        title="TikTok"
+        description={`Ultima sincronizacao: ${getLastSync(data?.integrations, "TIKTOK")}`}
+        icon={<Music2 className="h-5 w-5" />}
+        accent="#22D3EE"
+        connected={tiktokConnected}
+      >
+        {loading ? (
+          <LoadingGrid />
+        ) : tiktok ? (
+          <>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <KpiCard title="Seguidores" value={tiktok.followerCount ?? 0} icon={<Users className="h-5 w-5" />} tooltip="Total de seguidores capturado pela API do TikTok." color="#22D3EE" />
+              <KpiCard title="Visualizações" value={tiktok.totalViews ?? 0} icon={<Eye className="h-5 w-5" />} tooltip="Visualizações somadas dos videos recentes coletados." color="#7C3AED" />
+              <KpiCard title="Curtidas" value={tiktok.totalLikes ?? tiktok.likesCount ?? 0} icon={<Heart className="h-5 w-5" />} tooltip="Curtidas totais dos videos recentes ou do perfil." color="#A855F7" />
+              <KpiCard title="Shares" value={tiktok.totalShares ?? 0} icon={<Share2 className="h-5 w-5" />} tooltip="Compartilhamentos dos videos recentes coletados." color="#C084FC" />
+            </div>
 
-            {/* Top vídeos TikTok */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <Card className="border-white/[0.08] bg-[#111118]/80 backdrop-blur-xl">
-                <CardHeader>
-                  <CardTitle className="text-base">Top Vídeos — TikTok</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {tiktokData.videos.map((video, index) => (
-                      <div key={video.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/[0.03] transition-colors">
-                        <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#FE2C55]/10 flex items-center justify-center text-sm font-bold text-[#FE2C55]">
-                          #{index + 1}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate">{video.title}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {video.visualizacoes.toLocaleString("pt-BR")} views · {video.curtidas.toLocaleString("pt-BR")} curtidas
-                          </p>
-                        </div>
+            <Card>
+              <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-base">Videos recentes</CardTitle>
+                <Badge variant="secondary">{formatNumber(tiktok.recentVideos?.length ?? 0)} videos</Badge>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+                  {(tiktok.recentVideos ?? []).map((video, index) => (
+                    <div key={video.id ?? index} className="flex items-center gap-3 rounded-xl border border-border bg-muted/20 p-3 transition-colors hover:bg-muted/35">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary">
+                        #{index + 1}
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium text-foreground">{video.title || `Video ${index + 1}`}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {formatNumber(video.views ?? 0)} views · {formatNumber(video.likes ?? 0)} curtidas · {formatNumber(video.shares ?? 0)} shares
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {(tiktok.recentVideos?.length ?? 0) === 0 ? (
+                  <p className="py-8 text-center text-sm text-muted-foreground">Videos recentes aparecerão após a próxima sincronização.</p>
+                ) : null}
+              </CardContent>
+            </Card>
+          </>
+        ) : (
+          <ChannelEmptyState
+            title={tiktokConnected ? "TikTok conectado, aguardando dados" : "TikTok ainda nao conectado"}
+            description={tiktokConnected ? "A integração existe, mas ainda nao ha snapshot de metricas. Rode a coleta ou aguarde o cron." : "Conecte o TikTok para acompanhar seguidores, views, curtidas e videos recentes."}
+            accent="#22D3EE"
+          />
         )}
-      </div>
-
-      {/* Comparativo consolidado */}
-      {!loading && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          <Card className="border-white/[0.08] bg-[#111118]/80 backdrop-blur-xl">
-            <CardHeader>
-              <CardTitle className="text-base">Comparativo Instagram vs TikTok</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-white/[0.08]">
-                      <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase">Métrica</th>
-                      <th className="text-right py-3 px-4 text-xs font-semibold text-muted-foreground uppercase">Instagram</th>
-                      <th className="text-right py-3 px-4 text-xs font-semibold text-muted-foreground uppercase">TikTok</th>
-                      <th className="text-right py-3 px-4 text-xs font-semibold text-muted-foreground uppercase">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-white/[0.04]">
-                      <td className="py-3 px-4 font-medium">Seguidores</td>
-                      <td className="py-3 px-4 text-right text-muted-foreground">{instagramData.seguidores.toLocaleString("pt-BR")}</td>
-                      <td className="py-3 px-4 text-right text-muted-foreground">{tiktokData.seguidores.toLocaleString("pt-BR")}</td>
-                      <td className="py-3 px-4 text-right font-semibold text-white">{(instagramData.seguidores + tiktokData.seguidores).toLocaleString("pt-BR")}</td>
-                    </tr>
-                    <tr className="border-b border-white/[0.04]">
-                      <td className="py-3 px-4 font-medium">Alcance Total</td>
-                      <td className="py-3 px-4 text-right text-muted-foreground">{instagramData.alcance.toLocaleString("pt-BR")}</td>
-                      <td className="py-3 px-4 text-right text-muted-foreground">{tiktokData.visualizacoes.toLocaleString("pt-BR")}</td>
-                      <td className="py-3 px-4 text-right font-semibold text-white">{(instagramData.alcance + tiktokData.visualizacoes).toLocaleString("pt-BR")}</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4 font-medium">Taxa Engajamento</td>
-                      <td className="py-3 px-4 text-right text-[#10B981]">{instagramData.engajamento}%</td>
-                      <td className="py-3 px-4 text-right text-[#10B981]">{tiktokData.engajamento}%</td>
-                      <td className="py-3 px-4 text-right font-semibold text-[#10B981]">
-                        {calcEngajamento(
-                          instagramData.posts.reduce((a, p) => a + p.curtidas, 0) + tiktokData.curtidas,
-                          instagramData.posts.reduce((a, p) => a + p.comentarios, 0) + tiktokData.comentarios,
-                          tiktokData.shares,
-                          instagramData.alcance + tiktokData.visualizacoes
-                        ).toFixed(1)}%
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
-    </div>
+      </ChannelSection>
+    </DashboardPageShell>
   );
 }

@@ -120,7 +120,7 @@ export default function GoogleDashboard() {
     <div className="space-y-6">
       {/* Título */}
       <div className="flex items-center gap-2">
-        <MapPin className="h-6 w-6 text-[#10B981]" />
+        <MapPin className="h-6 w-6 text-primary" />
         <div>
           <h1 className="text-2xl font-bold text-white">Google Meu Negócio</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
@@ -148,7 +148,7 @@ export default function GoogleDashboard() {
             previousValue={gmbData.visualizacoesAnterior}
             icon={<Eye className="h-5 w-5" />}
             tooltip="Quantas vezes seu perfil apareceu no Google Maps e Pesquisa. Isso inclui quem viu seu nome, fotos e avaliações."
-            color="#10B981"
+            color="#7C3AED"
           />
           <KpiCard
             title="Cliques p/ Ligar"
@@ -162,7 +162,7 @@ export default function GoogleDashboard() {
             value={gmbData.cliquesRotas}
             icon={<Navigation className="h-5 w-5" />}
             tooltip="Pessoas que pediram direções até sua empresa. Indica que elas pretendem ir até lá."
-            color="#3B82F6"
+            color="#22D3EE"
           />
           <KpiCard
             title="Nota Média"
@@ -215,7 +215,7 @@ export default function GoogleDashboard() {
                   <div>
                     <div className="flex items-center justify-between text-sm mb-2">
                       <div className="flex items-center gap-2">
-                        <Search className="h-4 w-4 text-[#10B981]" />
+                        <Search className="h-4 w-4 text-primary" />
                         <span className="text-foreground">Busca por Categoria</span>
                       </div>
                       <span className="font-semibold text-foreground">
@@ -227,7 +227,7 @@ export default function GoogleDashboard() {
                         initial={{ width: 0 }}
                         animate={{ width: `${(gmbData.buscasCategoria / gmbData.visualizacoes) * 100}%` }}
                         transition={{ duration: 1, delay: 0.4 }}
-                        className="h-full rounded-full bg-[#10B981]"
+                        className="h-full rounded-full bg-primary"
                       />
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
@@ -272,7 +272,7 @@ export default function GoogleDashboard() {
                           color: "#E4E4E7",
                         }}
                       />
-                      <Bar dataKey="vistas" fill="#10B981" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="vistas" fill="#7C3AED" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

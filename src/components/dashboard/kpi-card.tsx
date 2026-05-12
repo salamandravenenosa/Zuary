@@ -110,11 +110,15 @@ export function KpiCard({
   return (
     <Card
       className={cn(
-        "relative overflow-hidden transition-all duration-300",
+        "zuary-panel-hover relative overflow-hidden",
         achieved &&
           "border-[#10B981]/30 bg-[#10B981]/[0.03]"
       )}
     >
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-70"
+        style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }}
+      />
       <CardContent className="p-5">
         <div className="flex items-start justify-between">
           {/* Ícone + Label */}
@@ -157,7 +161,7 @@ export function KpiCard({
 
         {/* Valor principal animado */}
         <div className="mt-4 mb-2">
-          <span className="text-3xl font-bold text-white tracking-tight">
+          <span className="text-3xl font-bold text-foreground tracking-tight">
             <AnimatedNumber
               value={value}
               prefix={prefix}

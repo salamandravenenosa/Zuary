@@ -2,12 +2,13 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Globe, Share2, MapPin, FileText, Settings,
-  Plug, Shield, ChevronLeft, ChevronRight, Sparkles, Menu, X, LogOut, User,
+  Plug, ChevronLeft, ChevronRight, Menu, X, LogOut, User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -48,14 +49,21 @@ export function Sidebar({ userRole = "CLINIC", clinicName }: SidebarProps) {
     <>
       {/* Logo */}
       <div className="flex h-16 items-center gap-3 px-4 border-b border-border">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-[#7C3AED] flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-white" />
+        <Link href="/dashboard" className="group flex min-w-0 items-center gap-3">
+          <div className="brand-mark relative flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border border-primary/25 bg-primary/10 shadow-[0_0_34px_rgba(124,58,237,0.28)]">
+            <Image
+              src="/icon-1024.png"
+              alt="Zuary"
+              width={40}
+              height={40}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+              priority
+            />
           </div>
           {!collapsed && (
-            <div>
-              <p className="text-sm font-bold text-foreground leading-none">Zuary</p>
-              <p className="text-[11px] text-muted-foreground mt-0.5 truncate max-w-[120px]">{clinicName || "Meu Negócio"}</p>
+            <div className="min-w-0">
+              <p className="text-sm font-bold leading-none text-foreground">Zuary</p>
+              <p className="mt-1 max-w-[140px] truncate text-[11px] text-muted-foreground">{clinicName || "Meu Negócio"}</p>
             </div>
           )}
         </Link>
@@ -68,9 +76,16 @@ export function Sidebar({ userRole = "CLINIC", clinicName }: SidebarProps) {
           return (
             <Link key={item.href} href={item.href}
               onClick={() => setMobileOpen(false)}
-              className={cn("flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
-                isActive ? "bg-primary/15 text-primary border border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent border border-transparent"
+              className={cn("group relative flex items-center gap-3 overflow-hidden rounded-lg border px-3 py-2.5 text-sm font-medium transition-all",
+                isActive ? "border-primary/25 bg-primary/15 text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]" : "border-transparent text-muted-foreground hover:border-border hover:bg-accent hover:text-foreground"
               )}>
+              {isActive && !collapsed ? (
+                <motion.span
+                  layoutId="sidebar-active"
+                  className="absolute inset-y-1 left-1 w-1 rounded-full bg-primary shadow-[0_0_16px_rgba(124,58,237,0.75)]"
+                />
+              ) : null}
+              <span className="pointer-events-none absolute inset-0 translate-x-[-120%] bg-[linear-gradient(100deg,transparent,rgba(255,255,255,0.08),transparent)] transition-transform duration-700 group-hover:translate-x-[120%]" />
               <item.icon className={cn("h-5 w-5 flex-shrink-0", isActive ? "text-primary" : "text-muted-foreground")} />
               {!collapsed && <span className="truncate">{item.label}</span>}
             </Link>
@@ -85,9 +100,10 @@ export function Sidebar({ userRole = "CLINIC", clinicName }: SidebarProps) {
               return (
                 <Link key={item.href} href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className={cn("flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
-                    isActive ? "bg-primary/15 text-primary border border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-accent border border-transparent"
+                  className={cn("group relative flex items-center gap-3 overflow-hidden rounded-lg border px-3 py-2.5 text-sm font-medium transition-all",
+                    isActive ? "border-primary/25 bg-primary/15 text-primary" : "border-transparent text-muted-foreground hover:border-border hover:bg-accent hover:text-foreground"
                   )}>
+                  <span className="pointer-events-none absolute inset-0 translate-x-[-120%] bg-[linear-gradient(100deg,transparent,rgba(255,255,255,0.08),transparent)] transition-transform duration-700 group-hover:translate-x-[120%]" />
                   <item.icon className={cn("h-5 w-5 flex-shrink-0", isActive ? "text-primary" : "text-muted-foreground")} />
                   {!collapsed && <span className="truncate">{item.label}</span>}
                 </Link>
@@ -132,7 +148,7 @@ export function Sidebar({ userRole = "CLINIC", clinicName }: SidebarProps) {
       {/* Sidebar desktop */}
       <motion.aside initial={false} animate={{ width: collapsed ? 72 : 260 }}
         transition={{ duration: 0.2 }}
-        className="hidden lg:flex fixed left-0 top-0 z-40 h-screen border-r border-border bg-card flex-col">
+        className="hidden lg:flex fixed left-0 top-0 z-40 h-screen border-r border-border bg-card/85 backdrop-blur-xl flex-col">
         <NavContent />
       </motion.aside>
 

@@ -18,7 +18,7 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch("/api/auth/session")
+    fetch("/api/auth/session", { credentials: "include" })
       .then((r) => r.json())
       .then((data) => {
         if (data?.user) {

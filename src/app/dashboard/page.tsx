@@ -26,7 +26,7 @@ export default function DashboardPage() {
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    fetch("/api/dashboard")
+    fetch("/api/dashboard", { credentials: "include" })
       .then((r) => r.json())
       .then((d) => { setData(d); setLoading(false); })
       .catch(() => setLoading(false));

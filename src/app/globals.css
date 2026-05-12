@@ -9,6 +9,13 @@
     --foreground: #E4E4E7;
     --card: #111118;
     --card-foreground: #E4E4E7;
+    --panel: rgba(17, 17, 24, 0.82);
+    --panel-strong: #15151f;
+    --panel-soft: rgba(255, 255, 255, 0.035);
+    --panel-line: rgba(255, 255, 255, 0.08);
+    --panel-line-strong: rgba(255, 255, 255, 0.14);
+    --glow-primary: rgba(124, 58, 237, 0.24);
+    --glow-cyan: rgba(34, 211, 238, 0.14);
     --primary: #7C3AED;
     --primary-foreground: #FFFFFF;
     --secondary: #1E1E2A;
@@ -33,6 +40,13 @@
     --foreground: #18181B;
     --card: #FFFFFF;
     --card-foreground: #18181B;
+    --panel: rgba(255, 255, 255, 0.88);
+    --panel-strong: #FFFFFF;
+    --panel-soft: rgba(24, 24, 27, 0.035);
+    --panel-line: rgba(24, 24, 27, 0.08);
+    --panel-line-strong: rgba(24, 24, 27, 0.14);
+    --glow-primary: rgba(124, 58, 237, 0.14);
+    --glow-cyan: rgba(8, 145, 178, 0.1);
     --primary: #7C3AED;
     --primary-foreground: #FFFFFF;
     --secondary: #F4F4F5;
@@ -59,6 +73,105 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-inter), system-ui, sans-serif;
+    background:
+      radial-gradient(circle at 18% 0%, var(--glow-primary), transparent 30rem),
+      radial-gradient(circle at 85% 10%, var(--glow-cyan), transparent 26rem),
+      var(--background);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    background:
+      linear-gradient(115deg, transparent 0%, rgba(124, 58, 237, 0.08) 36%, transparent 58%),
+      radial-gradient(circle at 52% 18%, rgba(168, 85, 247, 0.09), transparent 22rem);
+    opacity: 0.8;
+    animation: zuary-ambient 16s ease-in-out infinite alternate;
+  }
+}
+
+@layer components {
+  .zuary-panel {
+    position: relative;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.055), transparent 28%),
+      var(--panel);
+    border-color: var(--panel-line);
+    box-shadow:
+      0 18px 60px rgba(0, 0, 0, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .zuary-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background:
+      linear-gradient(135deg, rgba(124, 58, 237, 0.16), transparent 34%),
+      linear-gradient(315deg, rgba(255, 255, 255, 0.055), transparent 28%);
+    opacity: 0.65;
+  }
+
+  .zuary-panel > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .zuary-panel-hover {
+    transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+  }
+
+  .zuary-panel-hover:hover {
+    border-color: var(--panel-line-strong);
+    transform: translateY(-1px);
+  }
+
+  .brand-mark::after {
+    content: "";
+    position: absolute;
+    inset: -40%;
+    background: conic-gradient(from 180deg, transparent, rgba(255, 255, 255, 0.34), transparent 32%);
+    animation: zuary-spin 5s linear infinite;
+    opacity: 0;
+    transition: opacity 180ms ease;
+  }
+
+  .brand-mark:hover::after {
+    opacity: 1;
+  }
+
+  .metric-grid {
+    background-image:
+      linear-gradient(var(--panel-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--panel-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+  }
+}
+
+@keyframes zuary-ambient {
+  0% { transform: translate3d(-1.5rem, -1rem, 0) scale(1); opacity: 0.65; }
+  100% { transform: translate3d(1rem, 1.25rem, 0) scale(1.04); opacity: 0.95; }
+}
+
+@keyframes zuary-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  .brand-mark::after {
+    animation: none;
+  }
+
+  .zuary-panel-hover,
+  .zuary-panel-hover:hover {
+    transform: none;
   }
 }
 

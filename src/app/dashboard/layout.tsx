@@ -15,7 +15,7 @@ export default function DashboardLayout({
   const [userRole, setUserRole] = useState("CLINIC");
 
   useEffect(() => {
-    fetch("/api/auth/session")
+    fetch("/api/auth/session", { credentials: "include" })
       .then((r) => r.json())
       .then((data) => {
         if (data?.user) {

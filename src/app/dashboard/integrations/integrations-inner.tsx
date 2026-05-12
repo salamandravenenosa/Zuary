@@ -81,7 +81,7 @@ export default function IntegrationsInner() {
   }, [searchParams]);
 
   const fetchData = () => {
-    fetch("/api/integrations/status")
+    fetch("/api/integrations/status", { credentials: "include" })
       .then((r) => r.json())
       .then((data) => {
         const map: Record<string, any> = {};
@@ -91,7 +91,7 @@ export default function IntegrationsInner() {
       })
       .catch(() => setLoading(false));
 
-    fetch("/api/auth/session")
+    fetch("/api/auth/session", { credentials: "include" })
       .then((r) => r.json())
       .then((data) => { if (data?.user?.clinicId) setClinicId(data.user.clinicId); })
       .catch(() => {});
