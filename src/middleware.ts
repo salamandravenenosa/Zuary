@@ -1,11 +1,18 @@
-// Middleware — correto para NextAuth v5 beta (cookies authjs.*)
+// Middleware — permite crawlers em rotas públicas
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  const userAgent = req.headers.get("user-agent") || "";
 
-  // Rotas públicas
+  // Crawlers do Facebook, Google, TikTok — sempre permite
+  const isCrawler = /facebookexternalhit|Googlebot|TikTokBot|Twitterbot|LinkedInBot/i.test(userAgent);
+  if (isCrawler) {
+    return NextResponse.next();
+  }
+
+  // Rotas públicas — sempre permite
   if (
     pathname.startsWith("/login") ||
     pathname.startsWith("/about") ||
@@ -14,7 +21,12 @@ export function middleware(req: NextRequest) {
     pathname.startsWith("/legal") ||
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/api/debug") ||
-    pathname === "/"
+    pathname.startsWith("/onboarding") ||
+    pathname.startsWith("/forgot-password") ||
+    pathname.startsWith("/reset-password") ||
+    pathname.startsWith("/sitemap") ||
+    pathname === "/" ||
+    pathname === "/robots.txt"
   ) {
     return NextResponse.next();
   }
@@ -23,7 +35,7 @@ export function middleware(req: NextRequest) {
   const isProtected = pathname.startsWith("/dashboard") || pathname.startsWith("/admin");
   if (!isProtected) return NextResponse.next();
 
-  // NextAuth v5 beta usa "authjs.session-token" (NÃO "next-auth.session-token")
+  // Verifica sessão
   const sessionToken =
     req.cookies.get("authjs.session-token")?.value ||
     req.cookies.get("__Secure-authjs.session-token")?.value;
@@ -36,5 +48,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|icon-1024.png|apple-touch-icon.png).*)"],
 };
