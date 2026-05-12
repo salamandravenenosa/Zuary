@@ -1,12 +1,16 @@
-// Configuração do NextAuth v5 — API route
-// Providers: Credentials + Discord + Google
+// Configuração do NextAuth v5 — com debug
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Discord from "next-auth/providers/discord";
 import Google from "next-auth/providers/google";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import type { NextRequest } from "next/server";
+
+// Log de debug para verificar variáveis
+console.log("[AUTH] GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID ? "SET" : "MISSING");
+console.log("[AUTH] GOOGLE_CLIENT_SECRET:", process.env.GOOGLE_CLIENT_SECRET ? "SET" : "MISSING");
+console.log("[AUTH] DISCORD_CLIENT_ID:", process.env.DISCORD_CLIENT_ID ? "SET" : "MISSING");
+console.log("[AUTH] DISCORD_CLIENT_SECRET:", process.env.DISCORD_CLIENT_SECRET ? "SET" : "MISSING");
 
 const authConfig = NextAuth({
   providers: [
@@ -21,32 +25,20 @@ const authConfig = NextAuth({
           where: { email: credentials.email as string },
         });
         if (!user || !user.active) return null;
-        const isPasswordValid = await bcrypt.compare(
-          credentials.password as string,
-          user.passwordHash
-        );
+        const isPasswordValid = await bcrypt.compare(credentials.password as string, user.passwordHash);
         if (!isPasswordValid) return null;
-        await prisma.user.update({
-          where: { id: user.id },
-          data: { lastLoginAt: new Date() },
-        }).catch(() => {});
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          clinicId: user.clinicId,
-        };
+        await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } }).catch(() => {});
+        return { id: user.id, email: user.email, name: user.name, role: user.role, clinicId: user.clinicId };
       },
     }),
     Discord({
-      clientId: process.env.DISCORD_CLIENT_ID || "",
-      clientSecret: process.env.DISCORD_CLIENT_SECRET || "",
+      clientId: process.env.DISCORD_CLIENT_ID!,
+      clientSecret: process.env.DISCORD_CLIENT_SECRET!,
       authorization: { params: { scope: "identify email" } },
     }),
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
         params: {
           scope: "openid email profile",
@@ -64,32 +56,11 @@ const authConfig = NextAuth({
         if (email) {
           let dbUser = await prisma.user.findUnique({ where: { email } });
           if (!dbUser) {
-            // Cria usuário
             dbUser = await prisma.user.create({
-              data: {
-                email,
-                name: user.name || user.email?.split("@")[0] || "Usuário",
-                passwordHash: "",
-                role: "CLINIC",
-                emailVerified: new Date(),
-                avatarUrl: user.image || null,
-              },
+              data: { email, name: user.name || user.email?.split("@")[0] || "Usuário", passwordHash: "", role: "CLINIC", emailVerified: new Date(), avatarUrl: user.image || null },
             });
-
-            // Cria empresa padrão automaticamente
-            const clinic = await prisma.clinic.create({
-              data: {
-                name: user.name || "Meu Negócio",
-                slug: `negocio-${Date.now().toString(36)}`,
-                primaryColor: "#7C3AED",
-              },
-            });
-
-            await prisma.user.update({
-              where: { id: dbUser.id },
-              data: { clinicId: clinic.id },
-            });
-
+            const clinic = await prisma.clinic.create({ data: { name: user.name || "Meu Negócio", slug: `negocio-${Date.now().toString(36)}`, primaryColor: "#7C3AED" } });
+            await prisma.user.update({ where: { id: dbUser.id }, data: { clinicId: clinic.id } });
             dbUser.clinicId = clinic.id;
           }
           token.role = dbUser.role;
@@ -112,8 +83,6 @@ const authConfig = NextAuth({
       return session;
     },
     async redirect({ url, baseUrl }) {
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      if (new URL(url).origin === baseUrl) return url;
       return `${baseUrl}/dashboard`;
     },
   },
@@ -121,6 +90,4 @@ const authConfig = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
 });
 
-// Exportar handlers — Next.js 14 App Router
-export const GET = authConfig.handlers.GET;
-export const POST = authConfig.handlers.POST;
+export const { GET, POST } = authConfig;
