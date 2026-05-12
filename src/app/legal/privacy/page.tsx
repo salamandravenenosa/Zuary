@@ -1,5 +1,14 @@
-// Política de Privacidade — LGPD + GDPR Compliance
-// Página obrigatória para aprovação em todas as plataformas
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Política de Privacidade",
+  description:
+    "Política de Privacidade do Zuary, com informações sobre LGPD, OAuth, integrações e uso de dados de métricas.",
+  alternates: {
+    canonical: "/legal/privacy",
+  },
+};
+
 export default function PrivacyPolicyPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-16">

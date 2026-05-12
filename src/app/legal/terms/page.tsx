@@ -1,4 +1,14 @@
-// Termos de Uso — Compliance com plataformas
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Termos de Uso",
+  description:
+    "Termos de Uso do Zuary para acesso ao dashboard, integrações OAuth, métricas e relatórios.",
+  alternates: {
+    canonical: "/legal/terms",
+  },
+};
+
 export default function TermsPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-16">
@@ -42,7 +52,7 @@ export default function TermsPage() {
             <li>Tentar acessar contas de outros usuários</li>
             <li>Manipular métricas de engajamento</li>
             <li>Usar o serviço para envio de spam ou automação não autorizada</li>
-            <li>Revender ou redistribuir dados obtidos through o serviço</li>
+            <li>Revender ou redistribuir dados obtidos pelo serviço</li>
             <li>Interferir no funcionamento do serviço ou de suas integrações</li>
           </ul>
         </section>
@@ -57,7 +67,7 @@ export default function TermsPage() {
         <section>
           <h2 className="text-xl font-semibold text-white mb-3">6. Disponibilidade e Suporte</h2>
           <p className="text-muted-foreground leading-relaxed">
-            Nos esforçamos para manter o serviço disponível 24/7, mas não garantimos disponibilidade ininterrupta. Suporte técnico está disponível via email: suporte@negóciometrics.com.br
+            Trabalhamos para manter o serviço disponível, mas não garantimos operação ininterrupta. Suporte técnico está disponível por email: suporte@zuary.vercel.app
           </p>
         </section>
 
