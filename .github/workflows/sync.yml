@@ -1,0 +1,20 @@
+# Cron job — coleta de dados a cada hora
+# Roda no GitHub Actions (grátis) e chama a API do Vercel
+name: Sync Metrics
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # A cada hora
+  workflow_dispatch:       # Botão manual no GitHub
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync metrics
+        run: |
+          echo "Iniciando sync..."
+          curl -s -w "\nHTTP Status: %{http_code}\n" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ vars.APP_URL }}/api/cron/sync"
+          echo "Sync concluído"
