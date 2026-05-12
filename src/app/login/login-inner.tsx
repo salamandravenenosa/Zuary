@@ -1,11 +1,11 @@
-// Login inner — 100% fetch direto, sem depender do signIn
+// Login inner — fetch direto na API do NextAuth com cookies corretos
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Sparkles, Loader2, AlertCircle, Eye, EyeOff, CheckCircle2 } from "lucide-react";
+import { Sparkles, Loader2, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -42,100 +42,94 @@ export default function LoginPageInner() {
   const [oauthLoading, setOauthLoading] = useState<string | null>(null);
 
   useEffect(() => {
-    if (authError) setError("Erro na autenticação. Tente novamente.");
+    if (authError) {
+      if (authError === "Configuration") {
+        setError("Configuração OAuth incorreta. Verifique as variáveis de ambiente.");
+      } else {
+        setError("Erro na autenticação. Tente novamente.");
+      }
+    }
   }, [authError]);
 
+  // Login com email + senha
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      // 1. Pega CSRF token + cookie
+      // 1. Pega CSRF token
       const csrfRes = await fetch("/api/auth/csrf", { credentials: "include" });
-      const csrfData = await csrfRes.json();
+      const { csrfToken } = await csrfRes.json();
 
-      // 2. POST direto para credentials
-      const formData = new URLSearchParams();
-      formData.append("csrfToken", csrfData.csrfToken);
-      formData.append("email", email);
-      formData.append("password", password);
-      formData.append("redirect", "false");
-      formData.append("json", "true");
-
+      // 2. POST para credentials com redirect: false
       const loginRes = await fetch("/api/auth/callback/credentials", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: formData.toString(),
+        body: new URLSearchParams({
+          csrfToken,
+          email,
+          password,
+          redirect: "false",
+        }),
         credentials: "include",
       });
 
-      // 3. Pode retornar 302 ou 200
-      const loginData = await loginRes.json().catch(() => ({}));
-
-      if (loginRes.ok || loginRes.redirected || loginRes.status === 302) {
+      // 3. Verifica se retornou redirect (302) ou erro
+      if (loginRes.redirected || loginRes.status === 302 || loginRes.ok) {
         // 4. Verifica se a sessão existe
         const sessionRes = await fetch("/api/auth/session", { credentials: "include" });
         const session = await sessionRes.json();
 
         if (session?.user) {
-          // Sessão OK — redireciona
           window.location.replace(callbackUrl);
           return;
         }
       }
 
       setError("Email ou senha inválidos");
-    } catch (err) {
+    } catch {
       setError("Erro ao fazer login. Tente novamente.");
     } finally {
       setLoading(false);
     }
   };
 
+  // Login OAuth
   const handleOAuth = (provider: "discord" | "google") => {
     setOauthLoading(provider);
-    // Redireciona para o endpoint de sign-in do NextAuth
     window.location.href = `/api/auth/signin/${provider}?callbackUrl=${encodeURIComponent(callbackUrl)}`;
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="fixed inset-0 z-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#7C3AED]/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#10B981]/5 rounded-full blur-3xl" />
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="relative z-10 w-full max-w-md"
-      >
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="relative z-10 w-full max-w-md">
         <div className="flex items-center justify-center gap-3 mb-8">
           <div className="h-12 w-12 rounded-xl bg-[#7C3AED] flex items-center justify-center">
             <Sparkles className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">Zuary</h1>
+            <h1 className="text-2xl font-bold text-foreground">Zuary</h1>
             <p className="text-sm text-muted-foreground">Marketing Analytics</p>
           </div>
         </div>
 
-        <Card className="border-white/[0.08] bg-[#111118]/80 backdrop-blur-xl">
+        <Card className="border-border bg-card">
           <CardHeader className="text-center">
             <CardTitle>Entrar</CardTitle>
             <CardDescription>Acesse sua dashboard de métricas</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {error && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                className="flex items-center gap-2 p-3 rounded-lg bg-[#EF4444]/10 border border-[#EF4444]/20"
-              >
-                <AlertCircle className="h-4 w-4 text-[#EF4444] flex-shrink-0" />
-                <p className="text-sm text-[#EF4444]">{error}</p>
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
+                className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+                <AlertCircle className="h-4 w-4 text-destructive flex-shrink-0" />
+                <p className="text-sm text-destructive">{error}</p>
               </motion.div>
             )}
 
@@ -152,54 +146,32 @@ export default function LoginPageInner() {
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/[0.08]" />
+                <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-[#111118] px-2 text-muted-foreground">ou</span>
+                <span className="bg-card px-2 text-muted-foreground">ou</span>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-3" autoComplete="on">
+            <form onSubmit={handleSubmit} className="space-y-3">
               <div>
                 <label className="text-sm text-muted-foreground mb-1.5 block">Email</label>
-                <Input
-                  type="email"
-                  placeholder="seu@email.com"
-                  value={email}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                  required
-                  autoComplete="email"
-                />
+                <Input type="email" placeholder="seu@email.com" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} required autoComplete="email" />
               </div>
               <div>
-                <div className="flex items-center justify-between">
-                <label className="text-sm text-muted-foreground">Senha</label>
-                <Link href="/forgot-password" className="text-xs text-[#7C3AED] hover:underline">
-                  Esqueci a senha
-                </Link>
-              </div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-sm text-muted-foreground">Senha</label>
+                  <Link href="/forgot-password" className="text-xs text-primary hover:underline">Esqueci a senha</Link>
+                </div>
                 <div className="relative">
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                    required
-                    className="pr-10"
-                    autoComplete="current-password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                    tabIndex={-1}
-                  >
+                  <Input type={showPassword ? "text" : "password"} placeholder="••••••••" value={password} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} required autoComplete="current-password" className="pr-10" />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors" tabIndex={-1}>
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
               </div>
               <Button type="submit" className="w-full" size="lg" disabled={loading || !!oauthLoading}>
-                {loading ? (<><Loader2 className="h-4 w-4 animate-spin mr-2" />Entrando...</>) : "Entrar com Email"}
+                {loading ? <><Loader2 className="h-4 w-4 animate-spin mr-2" />Entrando...</> : "Entrar com Email"}
               </Button>
             </form>
           </CardContent>
@@ -209,8 +181,8 @@ export default function LoginPageInner() {
           Zuary © 2026 · Marketing Analytics
         </p>
         <div className="flex items-center justify-center gap-4 mt-2">
-          <Link href="/legal/privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2">Política de Privacidade</Link>
-          <Link href="/legal/terms" className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2">Termos de Uso</Link>
+          <Link href="/legal/privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2">Privacidade</Link>
+          <Link href="/legal/terms" className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2">Termos</Link>
         </div>
       </motion.div>
     </div>
